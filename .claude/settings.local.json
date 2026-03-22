@@ -9,7 +9,12 @@
       "Bash(rbenv versions:*)",
       "Bash(gem environment:*)",
       "Bash(git check-ignore:*)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(yarn install:*)",
+      "Bash(bin/importmap pin:*)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(/home/jason/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh --project-dir /home/jason/workspace/financebuddy)",
+      "Bash(yarn:*)"
     ]
   }
 }
