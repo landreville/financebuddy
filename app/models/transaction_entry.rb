@@ -19,21 +19,23 @@ class TransactionEntry < ApplicationRecord
     expense_type = entry_types[:expense]
     income_type = entry_types[:income]
 
+    params = { scheduled: scheduled_status, balance: current_balance, expense: expense_type, income: income_type }
+
     select(
       "transaction_entries.*",
       sanitize_sql_array([
-        <<~SQL, scheduled_status, current_balance, scheduled_status, expense_type, scheduled_status, income_type, scheduled_status
-          CASE WHEN status = ? THEN NULL
-          ELSE ? - COALESCE(
+        <<~SQL, params
+          CASE WHEN status = :scheduled THEN NULL
+          ELSE :balance - COALESCE(
             SUM(
               CASE
-                WHEN status != ? AND entry_type = ? THEN amount
-                WHEN status != ? AND entry_type = ? THEN -amount
+                WHEN status != :scheduled AND entry_type = :expense THEN amount
+                WHEN status != :scheduled AND entry_type = :income THEN -amount
                 ELSE 0
               END
             ) OVER (
               ORDER BY
-                CASE WHEN status = ? THEN 1 ELSE 0 END,
+                CASE WHEN status = :scheduled THEN 1 ELSE 0 END,
                 date DESC, created_at DESC
               ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
             ),
@@ -42,7 +44,7 @@ class TransactionEntry < ApplicationRecord
         SQL
       ])
     ).order(
-      Arel.sql(sanitize_sql_array(["CASE WHEN status = ? THEN 0 ELSE 1 END", scheduled_status])),
+      Arel.sql(sanitize_sql_array(["CASE WHEN status = :scheduled THEN 0 ELSE 1 END", params])),
       date: :desc,
       created_at: :desc
     )
