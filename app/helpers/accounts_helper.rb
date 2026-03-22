@@ -1,13 +1,14 @@
 module AccountsHelper
   def grouped_accounts(accounts)
+    sorted = accounts.sort_by(&:name)
     {
       on_budget: {
-        cash: accounts.select { |a| a.on_budget? && a.cash? },
-        credit: accounts.select { |a| a.on_budget? && a.credit? }
+        cash: sorted.select { |a| a.on_budget? && a.cash? },
+        credit: sorted.select { |a| a.on_budget? && a.credit? }
       },
       tracking: {
-        loan: accounts.select { |a| a.tracking? && a.loan? },
-        investment: accounts.select { |a| a.tracking? && a.investment? }
+        loan: sorted.select { |a| a.tracking? && a.loan? },
+        investment: sorted.select { |a| a.tracking? && a.investment? }
       }
     }
   end

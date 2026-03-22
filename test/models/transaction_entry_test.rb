@@ -78,4 +78,28 @@ class TransactionEntryTest < ActiveSupport::TestCase
     txn = TransactionEntry.new(amount: 3200, entry_type: "income")
     assert_equal "$3,200.00", txn.display_inflow
   end
+
+  test "with_running_balance orders scheduled first then by date desc" do
+    entries = accounts(:chequing).transaction_entries.with_running_balance(3147.70)
+    statuses = entries.map(&:status)
+    scheduled_indices = statuses.each_index.select { |i| statuses[i] == "scheduled" }
+    posted_indices = statuses.each_index.select { |i| statuses[i] != "scheduled" }
+    assert scheduled_indices.max < posted_indices.min, "Scheduled entries should appear before posted entries" if scheduled_indices.any? && posted_indices.any?
+  end
+
+  test "with_running_balance computes running balance via window function" do
+    entries = accounts(:chequing).transaction_entries.with_running_balance(3147.70)
+    posted = entries.reject(&:scheduled?)
+
+    # First posted entry (newest) should have the current balance
+    assert_equal BigDecimal("3147.70"), posted.first.running_balance
+  end
+
+  test "with_running_balance returns nil running_balance for scheduled entries" do
+    entries = accounts(:chequing).transaction_entries.with_running_balance(3147.70)
+    scheduled = entries.select(&:scheduled?)
+    scheduled.each do |entry|
+      assert_nil entry.running_balance
+    end
+  end
 end
