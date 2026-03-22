@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "Bash(gem list:*)",
+      "Bash(rails new:*)",
+      "Bash(gem contents:*)",
+      "Bash(gem install:*)",
+      "Bash(rbenv versions:*)",
+      "Bash(gem environment:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(echo \"exit: $?\")"
+    ]
+  }
+}
