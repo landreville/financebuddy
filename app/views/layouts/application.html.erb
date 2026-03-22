@@ -28,6 +28,11 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="d-flex flex-column vh-100">
+      <%= render "shared/top_nav" %>
+      <div class="d-flex flex-grow-1" style="min-height: 0;">
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>
