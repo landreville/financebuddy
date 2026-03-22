@@ -1,0 +1,27 @@
+<div class="fb-table">
+  <div class="fb-table__header">
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--status"></div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--date">Date</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--payee">Payee</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--category">Category</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--memo">Memo</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Outflow</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--inflow">Inflow</div>
+    <div class="fb-table__cell fb-table__cell--header fb-table__cell--balance">Balance</div>
+  </div>
+
+  <div class="fb-table__body">
+    <% if @ordered_entries.empty? %>
+      <div class="d-flex align-items-center justify-content-center h-100">
+        <div class="text-center">
+          <p style="font-family: Inter, sans-serif; font-size: 14px; color: #868e96;">No transactions yet</p>
+          <p style="font-family: Inter, sans-serif; font-size: 12px; color: #adb5bd;">Click + Transaction to add your first one.</p>
+        </div>
+      </div>
+    <% else %>
+      <% @ordered_entries.each do |entry| %>
+        <%= render "transaction_row", entry: entry %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
