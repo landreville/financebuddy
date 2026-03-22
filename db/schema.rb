@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_22_204926) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_22_214546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
 
+  create_table "accounts", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "account_type", null: false
+    t.integer "budget_status", null: false
+    t.decimal "balance", precision: 15, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_type"], name: "index_accounts_on_account_type"
+    t.index ["budget_status"], name: "index_accounts_on_budget_status"
+  end
 end
