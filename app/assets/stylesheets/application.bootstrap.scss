@@ -1,2 +1,8 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+@import "variables";
+@import "components/top_nav";
+@import "components/sidebar";
+@import "components/transaction_table";
+@import "components/legend_bar";

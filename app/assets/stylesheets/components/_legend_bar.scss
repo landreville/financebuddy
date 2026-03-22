@@ -1,0 +1,18 @@
+.fb-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 6px 16px;
+  border-top: 1px solid $fb-border;
+  background: $fb-content-bg;
+  flex-shrink: 0;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: $fb-font-body;
+    font-size: 11px;
+    color: $fb-text-secondary;
+  }
+}
