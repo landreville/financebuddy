@@ -1,0 +1,19 @@
+<nav class="fb-top-nav">
+  <div class="fb-top-nav__brand">
+    <%= link_to "F-Buddy", root_path, class: "fb-top-nav__brand-name" %>
+    <span class="fb-top-nav__brand-tagline">F as in finance</span>
+  </div>
+
+  <div class="fb-top-nav__nav">
+    <%= link_to "Dashboard", "#", class: "fb-top-nav__nav-link" %>
+    <%= link_to "Budget", "#", class: "fb-top-nav__nav-link" %>
+    <%= link_to "Accounts", accounts_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'accounts'}" %>
+    <%= link_to "Reports", "#", class: "fb-top-nav__nav-link" %>
+    <%= link_to "Recurring", "#", class: "fb-top-nav__nav-link" %>
+  </div>
+
+  <div class="fb-top-nav__actions">
+    <%= link_to "+ Transaction", "#", class: "fb-top-nav__add-btn" %>
+    <%= link_to "Import", "#", class: "fb-top-nav__import-link" %>
+  </div>
+</nav>

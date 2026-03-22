@@ -1,0 +1,112 @@
+.fb-sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: $fb-sidebar-bg;
+  border-right: 1px solid $fb-border;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__section-label {
+    font-family: $fb-font-heading;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &--budget { color: $fb-accent-blue; }
+    &--tracking { color: $fb-text-secondary; }
+  }
+
+  &__type-label {
+    font-family: $fb-font-heading;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $fb-text-secondary;
+  }
+
+  &__account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__account-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: $fb-text-primary;
+
+    &:hover {
+      background: #e9ecef;
+      color: $fb-text-primary;
+    }
+
+    &--selected {
+      background: $fb-selected-account;
+
+      .fb-sidebar__account-name { font-weight: 500; }
+      .fb-sidebar__account-balance { font-weight: 600; }
+    }
+  }
+
+  &__account-name {
+    font-family: $fb-font-body;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  &__account-balance {
+    font-family: $fb-font-heading;
+    font-size: 12px;
+    font-weight: 400;
+
+    &--negative { color: $fb-danger-red; }
+    &--positive { color: $fb-text-primary; }
+  }
+
+  &__group-total {
+    font-family: $fb-font-heading;
+    font-size: 11px;
+    color: $fb-text-secondary;
+    text-align: right;
+    padding: 2px 6px;
+
+    &--negative { color: $fb-danger-red; }
+  }
+
+  &__divider {
+    height: 1px;
+    background: $fb-border;
+  }
+
+  &__net-worth {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+  }
+
+  &__net-worth-label {
+    font-family: $fb-font-heading;
+    font-size: 12px;
+    font-weight: 600;
+    color: $fb-text-primary;
+  }
+
+  &__net-worth-value {
+    font-family: $fb-font-heading;
+    font-size: 12px;
+    font-weight: 600;
+
+    &--positive { color: $fb-income-green; }
+    &--negative { color: $fb-danger-red; }
+  }
+}
