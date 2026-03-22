@@ -9,7 +9,7 @@ Set up a Ruby on Rails 8 application with AlpineJS as the frontend interactivity
 | Layer       | Technology                        | Notes                                      |
 |-------------|-----------------------------------|--------------------------------------------|
 | Backend     | Ruby 3.4, Rails 8                 | Matches installed rbenv Ruby 3.4.4         |
-| Database    | PostgreSQL 17                     | Dockerized via `postgres:17-alpine`        |
+| Database    | PostgreSQL 17 + pgvector          | Dockerized via `pgvector/pgvector:pg17`    |
 | Cache/Queue | Redis 7                           | Dockerized via `redis:7-alpine`            |
 | JS          | AlpineJS via importmaps           | No Node build step for Rails               |
 | CSS         | Bootstrap via `cssbundling-rails` | Rails-managed CSS bundling                 |
@@ -21,11 +21,12 @@ A `docker-compose.yml` at the project root with two services:
 
 ### PostgreSQL
 
-- Image: `postgres:17-alpine`
+- Image: `pgvector/pgvector:pg17` — PostgreSQL 17 with the `pgvector` extension pre-installed for vector similarity search
 - Port: `5432:5432`
 - Named volume: `financebuddy_postgres_data`
 - Health check: `pg_isready -U financebuddy`
 - Environment variables: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` with defaults for local dev
+- The `vector` extension is enabled in Rails via a migration: `enable_extension 'vector'`
 
 ### Redis
 
@@ -146,6 +147,7 @@ Note: `bin/dev` uses `foreman` to start both the Rails server and the CSS file w
 | Redis included despite Solid*      | Available for Sidekiq/caching/Cable later; Rails configs updated when needed |
 | `--skip-docker`                    | We control the Docker setup; Rails' generated Dockerfile is for prod      |
 | Bootstrap via cssbundling-rails    | Quick path to a decent UI; Rails-native integration                       |
+| pgvector image over plain Postgres | Drop-in replacement; vector extension pre-installed for future search features |
 
 ## Out of Scope
 
