@@ -8,7 +8,7 @@ Set up a Ruby on Rails 8 application with AlpineJS as the frontend interactivity
 
 | Layer       | Technology                        | Notes                                      |
 |-------------|-----------------------------------|--------------------------------------------|
-| Backend     | Ruby 3.3, Rails 8                 | Latest stable                              |
+| Backend     | Ruby 3.4, Rails 8                 | Matches installed rbenv Ruby 3.4.4         |
 | Database    | PostgreSQL 17                     | Dockerized via `postgres:17-alpine`        |
 | Cache/Queue | Redis 7                           | Dockerized via `redis:7-alpine`            |
 | JS          | AlpineJS via importmaps           | No Node build step for Rails               |
@@ -24,7 +24,7 @@ A `docker-compose.yml` at the project root with two services:
 - Image: `postgres:17-alpine`
 - Port: `5432:5432`
 - Named volume: `financebuddy_postgres_data`
-- Health check: `pg_isready -U $POSTGRES_USER`
+- Health check: `pg_isready -U financebuddy`
 - Environment variables: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` with defaults for local dev
 
 ### Redis
@@ -48,14 +48,23 @@ A `docker-compose.yml` at the project root with two services:
 Generated with:
 
 ```bash
-rails new . --database=postgresql --css=bootstrap --skip-docker
+rails new . --database=postgresql --css=bootstrap --javascript=importmap --skip-docker
 ```
 
 Key flags:
 - `--database=postgresql` — configures `pg` gem and generates `database.yml`
 - `--css=bootstrap` — sets up `cssbundling-rails` with Bootstrap
+- `--javascript=importmap` — explicit importmap selection (Rails 8 default, stated for clarity)
 - `--skip-docker` — we provide our own Docker Compose setup
-- `.` — generates into the current directory, preserving existing files
+- `.` — generates into the current directory
+
+### Handling file conflicts
+
+`rails new .` will prompt for conflicts with existing files (`.gitignore`, `package.json`). Strategy:
+
+1. Back up `.gitignore` before running the generator
+2. Allow Rails to overwrite `.gitignore`, then manually merge the Playwright patterns back in
+3. `package.json` will be **extended** (not replaced) by `cssbundling-rails` — it adds Bootstrap/Sass dependencies and CSS build scripts alongside the existing Playwright `devDependencies`. Verify Playwright entries survive after generation.
 
 ### database.yml
 
@@ -82,7 +91,6 @@ test:
 production:
   <<: *default
   database: financebuddy_production
-  url: <%= ENV["DATABASE_URL"] %>
 ```
 
 ## 3. AlpineJS Integration
@@ -101,15 +109,13 @@ window.Alpine = Alpine
 Alpine.start()
 ```
 
-## 4. Existing Files — Preserved
+## 4. Existing Files
 
-The following files/directories remain untouched:
-
-- `package.json`, `yarn.lock`, `node_modules/` — Playwright tooling only
-- `playwright.config.ts`, `tests/` — E2E test infrastructure
-- `.github/workflows/playwright.yml` — CI workflow for Playwright
-
-The existing `.gitignore` will be merged with Rails-generated entries. Both Ruby and Playwright patterns coexist.
+- `package.json`, `yarn.lock` — **extended** with Bootstrap/CSS build dependencies; existing Playwright `devDependencies` preserved
+- `node_modules/` — will grow with new CSS dependencies
+- `playwright.config.ts`, `tests/` — untouched
+- `.github/workflows/playwright.yml` — untouched
+- `.gitignore` — Rails-generated version merged with existing Playwright patterns; uncomment the `# .env` line to ensure `.env` is gitignored
 
 ## 5. Developer Workflow
 
@@ -120,8 +126,8 @@ docker compose up -d
 # First-time database setup
 bin/rails db:create db:migrate
 
-# Start Rails server
-bin/rails server
+# Start Rails server + CSS watcher (via Procfile.dev / foreman)
+bin/dev
 
 # App available at http://localhost:3000
 
@@ -129,13 +135,15 @@ bin/rails server
 yarn playwright test
 ```
 
+Note: `bin/dev` uses `foreman` to start both the Rails server and the CSS file watcher (`yarn build:css --watch`) simultaneously. Running `bin/rails server` alone will not recompile CSS on changes.
+
 ## Decisions & Rationale
 
 | Decision                          | Rationale                                                                 |
 |-----------------------------------|---------------------------------------------------------------------------|
 | Rails on host, services in Docker | Fastest dev loop; no volume mount lag or container rebuild on code change  |
 | Importmaps over esbuild/Vite      | AlpineJS is lightweight; no need for a JS build pipeline                  |
-| Redis included despite Solid*      | Provides flexibility for Sidekiq, Redis-backed caching, or Action Cable   |
+| Redis included despite Solid*      | Available for Sidekiq/caching/Cable later; Rails configs updated when needed |
 | `--skip-docker`                    | We control the Docker setup; Rails' generated Dockerfile is for prod      |
 | Bootstrap via cssbundling-rails    | Quick path to a decent UI; Rails-native integration                       |
 
