@@ -22,18 +22,18 @@ class TransactionEntry < ApplicationRecord
     select(
       "transaction_entries.*",
       sanitize_sql_array([
-        <<~SQL, current_balance, expense_type, income_type
-          CASE WHEN status = #{scheduled_status} THEN NULL
+        <<~SQL, scheduled_status, current_balance, scheduled_status, expense_type, scheduled_status, income_type, scheduled_status
+          CASE WHEN status = ? THEN NULL
           ELSE ? - COALESCE(
             SUM(
               CASE
-                WHEN status != #{scheduled_status} AND entry_type = ? THEN amount
-                WHEN status != #{scheduled_status} AND entry_type = ? THEN -amount
+                WHEN status != ? AND entry_type = ? THEN amount
+                WHEN status != ? AND entry_type = ? THEN -amount
                 ELSE 0
               END
             ) OVER (
               ORDER BY
-                CASE WHEN status = #{scheduled_status} THEN 1 ELSE 0 END,
+                CASE WHEN status = ? THEN 1 ELSE 0 END,
                 date DESC, created_at DESC
               ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
             ),
@@ -42,7 +42,7 @@ class TransactionEntry < ApplicationRecord
         SQL
       ])
     ).order(
-      Arel.sql("CASE WHEN status = #{scheduled_status} THEN 0 ELSE 1 END"),
+      Arel.sql(sanitize_sql_array(["CASE WHEN status = ? THEN 0 ELSE 1 END", scheduled_status])),
       date: :desc,
       created_at: :desc
     )
