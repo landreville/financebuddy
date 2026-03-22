@@ -100,7 +100,7 @@ Below a second divider. Row with "Net Worth" label (Space Grotesk 12px semibold)
 | Column | Width | Alignment |
 |--------|-------|-----------|
 | Status | 30px | Center |
-| Date | 72px | Left |
+| Date | 90px | Left |
 | Payee | 3fr | Left |
 | Category | 2fr | Left |
 | Memo | 2fr | Left |
@@ -199,7 +199,7 @@ Shows status dot + label for each state: Uncleared, Cleared, Reconciled, Schedul
 
 - **Currency:** CAD. Format as `$1,234.56` with comma thousands separator and 2 decimal places.
 - **Negative amounts:** Leading minus sign: `-$420.15`. No parenthetical notation.
-- **Date format:** `MMM DD` in the table (e.g., "Mar 22"). 72px column width accommodates this format at 12px.
+- **Date format:** ISO 8601 `YYYY-MM-DD` everywhere (e.g., "2026-03-22"). Date column width increased to 90px to accommodate.
 - **Transaction sort order:** Newest first (descending by date). Scheduled future transactions appear above all posted transactions.
 - **Running balance:** Calculated top-down as displayed (newest at top). Balance = previous row's balance adjusted by the current row's inflow/outflow.
 - **Net Worth:** Sum of all account balances (On-Budget + Tracking). Displayed in red if negative, `#2b8a3e` if positive.
