@@ -65,7 +65,7 @@ Key flags:
 
 1. Back up `.gitignore` before running the generator
 2. Allow Rails to overwrite `.gitignore`, then manually merge the Playwright patterns back in
-3. `package.json` will be **extended** (not replaced) by `cssbundling-rails` — it adds Bootstrap/Sass dependencies and CSS build scripts alongside the existing Playwright `devDependencies`. Verify Playwright entries survive after generation.
+3. Back up `package.json` before generation. `rails new --force` will **overwrite** it. After generation, merge the Playwright `devDependencies` and metadata fields back from the backup into the new `package.json`.
 
 ### database.yml
 
@@ -112,7 +112,7 @@ Alpine.start()
 
 ## 4. Existing Files
 
-- `package.json`, `yarn.lock` — **extended** with Bootstrap/CSS build dependencies; existing Playwright `devDependencies` preserved
+- `package.json`, `yarn.lock` — **overwritten** by Rails, then Playwright `devDependencies` and metadata merged back from backup
 - `node_modules/` — will grow with new CSS dependencies
 - `playwright.config.ts`, `tests/` — untouched
 - `.github/workflows/playwright.yml` — untouched
