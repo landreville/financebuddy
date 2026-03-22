@@ -1,0 +1,66 @@
+loblaws:
+  account: chequing
+  date: "2026-03-22"
+  amount: 52.30
+  entry_type: expense
+  status: uncleared
+  payee: Loblaws
+  category: Groceries
+  memo: Weekly shop
+
+tim_hortons:
+  account: chequing
+  date: "2026-03-21"
+  amount: 4.25
+  entry_type: expense
+  status: cleared
+  payee: Tim Hortons
+  category: Coffee Shops
+
+paycheque:
+  account: chequing
+  date: "2026-03-20"
+  amount: 3200.00
+  entry_type: income
+  status: cleared
+  payee: Employer Inc.
+  memo: Paycheque
+
+netflix:
+  account: chequing
+  date: "2026-03-19"
+  amount: 16.99
+  entry_type: expense
+  status: cleared
+  payee: Netflix
+  category: Subscriptions
+
+shell:
+  account: chequing
+  date: "2026-03-18"
+  amount: 62.40
+  entry_type: expense
+  status: cleared
+  payee: Shell
+  category: Gas
+  memo: Fill up
+
+costco:
+  account: chequing
+  date: "2026-03-15"
+  amount: 187.43
+  entry_type: expense
+  status: reconciled
+  payee: Costco
+  category: Groceries
+  memo: Bulk run
+
+rent_scheduled:
+  account: chequing
+  date: "2026-03-25"
+  amount: 1500.00
+  entry_type: expense
+  status: scheduled
+  payee: Landlord
+  category: Rent
+  memo: April rent
