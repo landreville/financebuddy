@@ -1,0 +1,20 @@
+<div class="fb-account-header">
+  <div>
+    <span class="fb-account-header__name"><%= @account.name %></span>
+    <span class="fb-account-header__type"><%= @account.display_type %></span>
+  </div>
+
+  <div class="fb-account-header__balances">
+    <% summary = account_balance_summary(@account) %>
+    <span class="fb-account-header__balance-item">
+      Cleared: <strong><%= format_balance(summary[:cleared]) %></strong>
+    </span>
+    <span class="fb-account-header__balance-item">
+      Uncleared: <strong><%= format_balance(summary[:uncleared]) %></strong>
+    </span>
+    <span class="fb-account-header__balance-item">
+      Balance: <strong><%= @account.display_balance %></strong>
+    </span>
+    <button class="fb-account-header__reconcile-btn">Reconcile</button>
+  </div>
+</div>

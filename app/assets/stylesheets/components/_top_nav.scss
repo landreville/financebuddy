@@ -1,0 +1,94 @@
+.fb-top-nav {
+  background: $fb-nav-bg;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+
+  &__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 160px;
+  }
+
+  &__brand-name {
+    font-family: $fb-font-heading;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  &__brand-tagline {
+    font-family: $fb-font-body;
+    font-size: 11px;
+    font-style: italic;
+    color: $fb-text-secondary;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 18px;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__nav-link {
+    font-family: $fb-font-heading;
+    font-size: 13px;
+    font-weight: 500;
+    color: $fb-text-secondary;
+    text-decoration: none;
+
+    &:hover {
+      color: #fff;
+    }
+
+    &--active {
+      font-weight: 600;
+      color: #fff;
+      border-bottom: 2px solid $fb-accent-blue;
+      padding-bottom: 4px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    min-width: 160px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &__add-btn {
+    font-family: $fb-font-heading;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    background: $fb-accent-blue;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    text-decoration: none;
+
+    &:hover {
+      background: darken($fb-accent-blue, 10%);
+      color: #fff;
+    }
+  }
+
+  &__import-link {
+    font-family: $fb-font-heading;
+    font-size: 11px;
+    font-weight: 500;
+    color: $fb-text-secondary;
+    text-decoration: none;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}

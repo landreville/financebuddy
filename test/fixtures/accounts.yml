@@ -1,0 +1,35 @@
+chequing:
+  name: Chequing
+  account_type: cash
+  budget_status: on_budget
+  balance: 3147.70
+
+savings:
+  name: Savings
+  account_type: cash
+  budget_status: on_budget
+  balance: 12500.00
+
+visa:
+  name: Visa
+  account_type: credit
+  budget_status: on_budget
+  balance: -420.15
+
+mortgage:
+  name: Mortgage
+  account_type: loan
+  budget_status: tracking
+  balance: -285000.00
+
+tfsa:
+  name: TFSA
+  account_type: investment
+  budget_status: tracking
+  balance: 8200.00
+
+rrsp:
+  name: RRSP
+  account_type: investment
+  budget_status: tracking
+  balance: 22000.00
