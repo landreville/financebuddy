@@ -12,6 +12,42 @@ class TransactionEntry < ApplicationRecord
   scope :posted, -> { where.not(status: :scheduled) }
   scope :scheduled, -> { where(status: :scheduled) }
 
+  # Returns entries ordered scheduled-first then by date desc, with running_balance
+  # computed via Postgres window function. Scheduled entries get NULL running balance.
+  scope :with_running_balance, ->(current_balance) {
+    scheduled_status = statuses[:scheduled]
+    expense_type = entry_types[:expense]
+    income_type = entry_types[:income]
+
+    select(
+      "transaction_entries.*",
+      sanitize_sql_array([
+        <<~SQL, current_balance, expense_type, income_type
+          CASE WHEN status = #{scheduled_status} THEN NULL
+          ELSE ? - COALESCE(
+            SUM(
+              CASE
+                WHEN status != #{scheduled_status} AND entry_type = ? THEN amount
+                WHEN status != #{scheduled_status} AND entry_type = ? THEN -amount
+                ELSE 0
+              END
+            ) OVER (
+              ORDER BY
+                CASE WHEN status = #{scheduled_status} THEN 1 ELSE 0 END,
+                date DESC, created_at DESC
+              ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+            ),
+            0
+          ) END AS running_balance
+        SQL
+      ])
+    ).order(
+      Arel.sql("CASE WHEN status = #{scheduled_status} THEN 0 ELSE 1 END"),
+      date: :desc,
+      created_at: :desc
+    )
+  }
+
   def outflow
     amount if expense? || (transfer? && amount.present?)
   end
