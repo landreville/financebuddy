@@ -5,6 +5,7 @@ class Account < ApplicationRecord
 
   belongs_to :ledger
   has_one :category, dependent: :nullify
+  has_many :transaction_lines, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :account_type, presence: true, inclusion: {in: ACCOUNT_TYPES}

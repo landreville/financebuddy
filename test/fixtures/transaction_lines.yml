@@ -1,0 +1,29 @@
+grocery_chequing_line:
+  transaction_entry: grocery_expense
+  account: chequing
+  amount: -52.30
+
+grocery_category_line:
+  transaction_entry: grocery_expense
+  account: groceries_expense
+  amount: 52.30
+
+paycheque_chequing_line:
+  transaction_entry: paycheque
+  account: chequing
+  amount: 3200.00
+
+paycheque_income_line:
+  transaction_entry: paycheque
+  account: income_account
+  amount: -3200.00
+
+transfer_from_chequing:
+  transaction_entry: savings_transfer
+  account: chequing
+  amount: -500.00
+
+transfer_to_savings:
+  transaction_entry: savings_transfer
+  account: savings
+  amount: 500.00
