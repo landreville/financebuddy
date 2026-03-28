@@ -1,0 +1,2 @@
+# Import entries are ephemeral — created during import and deleted after commit.
+# Tests create entries inline as needed.

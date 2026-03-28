@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_28_005405) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_005626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -73,6 +73,51 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_005405) do
     t.datetime "updated_at", null: false
     t.index ["ledger_id", "archived"], name: "index_category_groups_on_ledger_id_and_archived"
     t.index ["ledger_id"], name: "index_category_groups_on_ledger_id"
+  end
+
+  create_table "import_entries", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.bigint "account_id", null: false
+    t.bigint "import_profile_id"
+    t.string "batch_id", null: false
+    t.date "date", null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.string "payee_name"
+    t.string "memo"
+    t.string "fitid"
+    t.string "fingerprint"
+    t.bigint "category_id"
+    t.bigint "matched_transaction_id"
+    t.string "match_confidence"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_import_entries_on_account_id"
+    t.index ["batch_id"], name: "index_import_entries_on_batch_id"
+    t.index ["category_id"], name: "index_import_entries_on_category_id"
+    t.index ["import_profile_id"], name: "index_import_entries_on_import_profile_id"
+    t.index ["ledger_id", "fingerprint"], name: "index_import_entries_on_ledger_id_and_fingerprint"
+    t.index ["ledger_id", "fitid"], name: "index_import_entries_on_ledger_id_and_fitid"
+    t.index ["ledger_id"], name: "index_import_entries_on_ledger_id"
+    t.index ["matched_transaction_id"], name: "index_import_entries_on_matched_transaction_id"
+  end
+
+  create_table "import_profiles", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.string "file_format", null: false
+    t.jsonb "column_mapping"
+    t.string "date_format"
+    t.string "amount_style"
+    t.integer "debit_column"
+    t.integer "credit_column"
+    t.integer "indicator_column"
+    t.integer "skip_rows", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_import_profiles_on_account_id"
+    t.index ["ledger_id"], name: "index_import_profiles_on_ledger_id"
   end
 
   create_table "ledger_memberships", force: :cascade do |t|
@@ -197,6 +242,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_005405) do
   add_foreign_key "categories", "category_groups", on_delete: :restrict
   add_foreign_key "categories", "ledgers", on_delete: :cascade
   add_foreign_key "category_groups", "ledgers", on_delete: :cascade
+  add_foreign_key "import_entries", "accounts"
+  add_foreign_key "import_entries", "categories"
+  add_foreign_key "import_entries", "import_profiles"
+  add_foreign_key "import_entries", "ledgers", on_delete: :cascade
+  add_foreign_key "import_entries", "transactions", column: "matched_transaction_id"
+  add_foreign_key "import_profiles", "accounts"
+  add_foreign_key "import_profiles", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "users"
   add_foreign_key "payee_rules", "categories", on_delete: :restrict

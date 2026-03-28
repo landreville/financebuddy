@@ -1,0 +1,9 @@
+scotiabank_csv:
+  ledger: personal
+  account: chequing
+  name: Scotiabank Chequing CSV
+  file_format: csv
+  column_mapping: '{"date": 0, "amount": 3, "payee": 1, "memo": 2}'
+  date_format: "%m/%d/%Y"
+  amount_style: signed
+  skip_rows: 1

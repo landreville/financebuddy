@@ -9,6 +9,8 @@ class Ledger < ApplicationRecord
   has_many :budget_allocations, dependent: :destroy
   has_many :payee_rules, dependent: :destroy
   has_many :recurring_transactions, dependent: :destroy
+  has_many :import_profiles, dependent: :destroy
+  has_many :import_entries, dependent: :destroy
 
   validates :name, presence: true
   validates :currency, presence: true
