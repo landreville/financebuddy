@@ -4,6 +4,8 @@ class Ledger < ApplicationRecord
   has_many :accounts, dependent: :destroy
   has_many :category_groups, dependent: :destroy
   has_many :categories, dependent: :destroy
+  has_many :payees, dependent: :destroy
+  has_many :transaction_entries, dependent: :destroy
 
   validates :name, presence: true
   validates :currency, presence: true
