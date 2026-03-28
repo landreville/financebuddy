@@ -10,10 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_22_223125) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_004535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
+
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.string "name", null: false
+    t.string "account_type", null: false
+    t.boolean "on_budget", default: true, null: false
+    t.decimal "balance", precision: 12, scale: 2, default: "0.0", null: false
+    t.decimal "cleared_balance", precision: 12, scale: 2, default: "0.0", null: false
+    t.datetime "reconciled_at"
+    t.integer "display_order", default: 0, null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ledger_id", "account_type"], name: "index_accounts_on_ledger_id_and_account_type"
+    t.index ["ledger_id", "archived"], name: "index_accounts_on_ledger_id_and_archived"
+    t.index ["ledger_id"], name: "index_accounts_on_ledger_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.bigint "category_group_id", null: false
+    t.bigint "ledger_id", null: false
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.boolean "system_managed", default: false, null: false
+    t.bigint "credit_card_account_id"
+    t.integer "display_order", default: 0, null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_categories_on_account_id", unique: true
+    t.index ["category_group_id"], name: "index_categories_on_category_group_id"
+    t.index ["credit_card_account_id"], name: "index_categories_on_credit_card_account_id"
+    t.index ["ledger_id", "archived"], name: "index_categories_on_ledger_id_and_archived"
+    t.index ["ledger_id"], name: "index_categories_on_ledger_id"
+  end
+
+  create_table "category_groups", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.string "name", null: false
+    t.boolean "system_managed", default: false, null: false
+    t.integer "display_order", default: 0, null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ledger_id", "archived"], name: "index_category_groups_on_ledger_id_and_archived"
+    t.index ["ledger_id"], name: "index_category_groups_on_ledger_id"
+  end
 
   create_table "ledger_memberships", force: :cascade do |t|
     t.bigint "ledger_id", null: false
@@ -50,6 +97,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_22_223125) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "accounts", "ledgers", on_delete: :cascade
+  add_foreign_key "categories", "accounts"
+  add_foreign_key "categories", "accounts", column: "credit_card_account_id"
+  add_foreign_key "categories", "category_groups", on_delete: :restrict
+  add_foreign_key "categories", "ledgers", on_delete: :cascade
+  add_foreign_key "category_groups", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "users"
   add_foreign_key "sessions", "users"

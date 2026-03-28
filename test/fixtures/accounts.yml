@@ -1,0 +1,99 @@
+chequing:
+  ledger: personal
+  name: Scotiabank Chequing
+  account_type: cash
+  on_budget: true
+  balance: 5000.00
+  cleared_balance: 5000.00
+  display_order: 0
+  archived: false
+
+savings:
+  ledger: personal
+  name: Savings
+  account_type: cash
+  on_budget: false
+  balance: 10000.00
+  cleared_balance: 10000.00
+  display_order: 1
+  archived: false
+
+visa:
+  ledger: personal
+  name: Visa
+  account_type: credit
+  on_budget: true
+  balance: -250.00
+  cleared_balance: -250.00
+  display_order: 0
+  archived: false
+
+mortgage:
+  ledger: personal
+  name: Mortgage
+  account_type: loan
+  on_budget: false
+  balance: -350000.00
+  cleared_balance: -350000.00
+  display_order: 0
+  archived: false
+
+opening_balances:
+  ledger: personal
+  name: Opening Balances
+  account_type: equity
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+income_account:
+  ledger: personal
+  name: Income
+  account_type: revenue
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+groceries_expense:
+  ledger: personal
+  name: Groceries
+  account_type: expense
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+restaurants_expense:
+  ledger: personal
+  name: Restaurants
+  account_type: expense
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+rent_expense:
+  ledger: personal
+  name: Rent
+  account_type: expense
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+visa_payment_expense:
+  ledger: personal
+  name: Visa Payment
+  account_type: expense
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
