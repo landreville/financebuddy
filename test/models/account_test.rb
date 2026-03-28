@@ -3,78 +3,61 @@ require "test_helper"
 class AccountTest < ActiveSupport::TestCase
   test "valid account" do
     account = Account.new(
+      ledger: ledgers(:personal),
       name: "Chequing",
       account_type: "cash",
-      budget_status: "on_budget"
+      on_budget: true
     )
     assert account.valid?
   end
 
   test "requires name" do
-    account = Account.new(account_type: "cash", budget_status: "on_budget")
+    account = Account.new(ledger: ledgers(:personal), account_type: "cash")
     assert_not account.valid?
     assert_includes account.errors[:name], "can't be blank"
   end
 
   test "requires account_type" do
-    account = Account.new(name: "Chequing", budget_status: "on_budget")
+    account = Account.new(ledger: ledgers(:personal), name: "Test")
     assert_not account.valid?
+    assert_includes account.errors[:account_type], "can't be blank"
   end
 
-  test "requires budget_status" do
-    account = Account.new(name: "Chequing", account_type: "cash")
+  test "validates account_type inclusion" do
+    account = Account.new(ledger: ledgers(:personal), name: "Test", account_type: "invalid")
     assert_not account.valid?
-  end
-
-  test "account_type enum values" do
-    assert_equal %w[cash credit loan investment], Account.account_types.keys
-  end
-
-  test "budget_status enum values" do
-    assert_equal %w[on_budget tracking], Account.budget_statuses.keys
+    assert_includes account.errors[:account_type], "is not included in the list"
   end
 
   test "balance defaults to zero" do
-    account = Account.create!(name: "Test", account_type: "cash", budget_status: "on_budget")
+    account = Account.new(ledger: ledgers(:personal), name: "Test", account_type: "cash")
     assert_equal 0, account.balance
   end
 
-  test "scope on_budget" do
-    assert_includes Account.on_budget, accounts(:chequing)
-    assert_not_includes Account.on_budget, accounts(:mortgage)
+  test "cleared_balance defaults to zero" do
+    account = Account.new(ledger: ledgers(:personal), name: "Test", account_type: "cash")
+    assert_equal 0, account.cleared_balance
   end
 
-  test "scope tracking" do
-    assert_includes Account.tracking, accounts(:mortgage)
-    assert_not_includes Account.tracking, accounts(:chequing)
+  test "on_budget defaults to true" do
+    account = Account.new(ledger: ledgers(:personal), name: "Test", account_type: "cash")
+    assert account.on_budget
   end
 
-  test "scope by_type returns accounts of given type" do
-    cash_accounts = Account.where(account_type: :cash)
-    assert_includes cash_accounts, accounts(:chequing)
-    assert_includes cash_accounts, accounts(:savings)
+  test "archived defaults to false" do
+    account = Account.new(ledger: ledgers(:personal), name: "Test", account_type: "cash")
+    assert_not account.archived
   end
 
-  test "display_balance formats positive amount" do
-    account = Account.new(balance: 3147.70)
-    assert_equal "$3,147.70", account.display_balance
+  test "belongs to ledger" do
+    assert_equal ledgers(:personal), accounts(:chequing).ledger
   end
 
-  test "display_balance formats negative amount" do
-    account = Account.new(balance: -420.15)
-    assert_equal "-$420.15", account.display_balance
+  test "user-facing account types" do
+    assert_equal %w[cash credit loan investment], Account::USER_ACCOUNT_TYPES
   end
 
-  test "negative_balance? returns true for negative" do
-    assert Account.new(balance: -100).negative_balance?
-    assert_not Account.new(balance: 100).negative_balance?
-    assert_not Account.new(balance: 0).negative_balance?
-  end
-
-  test "display_type returns human-readable type" do
-    assert_equal "Cash Account", Account.new(account_type: "cash").display_type
-    assert_equal "Credit Account", Account.new(account_type: "credit").display_type
-    assert_equal "Loan Account", Account.new(account_type: "loan").display_type
-    assert_equal "Investment Account", Account.new(account_type: "investment").display_type
+  test "system account types" do
+    assert_equal %w[equity expense revenue], Account::SYSTEM_ACCOUNT_TYPES
   end
 end
