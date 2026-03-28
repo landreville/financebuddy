@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_005150) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -30,6 +30,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
     t.index ["ledger_id", "account_type"], name: "index_accounts_on_ledger_id_and_account_type"
     t.index ["ledger_id", "archived"], name: "index_accounts_on_ledger_id_and_archived"
     t.index ["ledger_id"], name: "index_accounts_on_ledger_id"
+  end
+
+  create_table "budget_allocations", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.bigint "category_id", null: false
+    t.date "month", null: false
+    t.decimal "assigned", precision: 12, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id", "month"], name: "index_budget_allocations_on_category_id_and_month", unique: true
+    t.index ["category_id"], name: "index_budget_allocations_on_category_id"
+    t.index ["ledger_id", "month"], name: "index_budget_allocations_on_ledger_id_and_month"
+    t.index ["ledger_id"], name: "index_budget_allocations_on_ledger_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -78,6 +91,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
     t.string "currency", limit: 3, default: "CAD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "payee_rules", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.bigint "payee_id", null: false
+    t.bigint "category_id", null: false
+    t.string "match_type", default: "exact", null: false
+    t.string "pattern", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_payee_rules_on_category_id"
+    t.index ["ledger_id"], name: "index_payee_rules_on_ledger_id"
+    t.index ["payee_id"], name: "index_payee_rules_on_payee_id"
   end
 
   create_table "payees", force: :cascade do |t|
@@ -139,6 +165,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
   end
 
   add_foreign_key "accounts", "ledgers", on_delete: :cascade
+  add_foreign_key "budget_allocations", "categories", on_delete: :restrict
+  add_foreign_key "budget_allocations", "ledgers", on_delete: :cascade
   add_foreign_key "categories", "accounts"
   add_foreign_key "categories", "accounts", column: "credit_card_account_id"
   add_foreign_key "categories", "category_groups", on_delete: :restrict
@@ -146,6 +174,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
   add_foreign_key "category_groups", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "users"
+  add_foreign_key "payee_rules", "categories", on_delete: :restrict
+  add_foreign_key "payee_rules", "ledgers", on_delete: :cascade
+  add_foreign_key "payee_rules", "payees", on_delete: :cascade
   add_foreign_key "payees", "ledgers", on_delete: :cascade
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_lines", "accounts", on_delete: :restrict
