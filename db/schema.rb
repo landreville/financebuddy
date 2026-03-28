@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_28_005150) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_005405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -115,6 +115,31 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_005150) do
     t.index ["ledger_id"], name: "index_payees_on_ledger_id"
   end
 
+  create_table "recurring_transactions", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.bigint "account_id", null: false
+    t.bigint "transfer_account_id"
+    t.bigint "payee_id"
+    t.bigint "category_id"
+    t.string "entry_type", null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.text "memo"
+    t.string "frequency", null: false
+    t.date "start_date", null: false
+    t.date "end_date"
+    t.date "next_due_date", null: false
+    t.boolean "auto_enter", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_recurring_transactions_on_account_id"
+    t.index ["category_id"], name: "index_recurring_transactions_on_category_id"
+    t.index ["ledger_id", "auto_enter", "next_due_date"], name: "idx_recurring_auto_enter_due"
+    t.index ["ledger_id", "next_due_date"], name: "index_recurring_transactions_on_ledger_id_and_next_due_date"
+    t.index ["ledger_id"], name: "index_recurring_transactions_on_ledger_id"
+    t.index ["payee_id"], name: "index_recurring_transactions_on_payee_id"
+    t.index ["transfer_account_id"], name: "index_recurring_transactions_on_transfer_account_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -178,9 +203,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_005150) do
   add_foreign_key "payee_rules", "ledgers", on_delete: :cascade
   add_foreign_key "payee_rules", "payees", on_delete: :cascade
   add_foreign_key "payees", "ledgers", on_delete: :cascade
+  add_foreign_key "recurring_transactions", "accounts"
+  add_foreign_key "recurring_transactions", "accounts", column: "transfer_account_id"
+  add_foreign_key "recurring_transactions", "categories"
+  add_foreign_key "recurring_transactions", "ledgers", on_delete: :cascade
+  add_foreign_key "recurring_transactions", "payees"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_lines", "accounts", on_delete: :restrict
   add_foreign_key "transaction_lines", "transactions", column: "transaction_entry_id", on_delete: :cascade
   add_foreign_key "transactions", "ledgers", on_delete: :cascade
   add_foreign_key "transactions", "payees", on_delete: :nullify
+  add_foreign_key "transactions", "recurring_transactions"
 end
