@@ -1,0 +1,20 @@
+food_dining:
+  ledger: personal
+  name: Food & Dining
+  system_managed: false
+  display_order: 0
+  archived: false
+
+bills:
+  ledger: personal
+  name: Bills & Utilities
+  system_managed: false
+  display_order: 1
+  archived: false
+
+credit_card_payments:
+  ledger: personal
+  name: Credit Card Payments
+  system_managed: true
+  display_order: 99
+  archived: false

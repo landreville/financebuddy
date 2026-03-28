@@ -1,0 +1,36 @@
+groceries:
+  category_group: food_dining
+  ledger: personal
+  account: groceries_expense
+  name: Groceries
+  system_managed: false
+  display_order: 0
+  archived: false
+
+restaurants:
+  category_group: food_dining
+  ledger: personal
+  account: restaurants_expense
+  name: Restaurants
+  system_managed: false
+  display_order: 1
+  archived: false
+
+rent:
+  category_group: bills
+  ledger: personal
+  account: rent_expense
+  name: Rent
+  system_managed: false
+  display_order: 0
+  archived: false
+
+visa_payment:
+  category_group: credit_card_payments
+  ledger: personal
+  account: visa_payment_expense
+  name: Visa Payment
+  system_managed: true
+  credit_card_account: visa
+  display_order: 0
+  archived: false
