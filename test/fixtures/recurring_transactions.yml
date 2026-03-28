@@ -1,0 +1,22 @@
+monthly_rent:
+  ledger: personal
+  account: chequing
+  payee: landlord
+  category: rent
+  entry_type: expense
+  amount: 1500.00
+  frequency: monthly
+  start_date: "2026-01-01"
+  next_due_date: "2026-04-01"
+  auto_enter: true
+
+monthly_savings:
+  ledger: personal
+  account: chequing
+  transfer_account: savings
+  entry_type: transfer
+  amount: 500.00
+  frequency: monthly
+  start_date: "2026-01-01"
+  next_due_date: "2026-04-01"
+  auto_enter: false
