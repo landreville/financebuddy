@@ -65,6 +65,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  # Pin minitest to 5.x; minitest 6.x changed the run API and is incompatible with Rails 8 railties
-  gem "minitest", "~> 5.25"
 end
