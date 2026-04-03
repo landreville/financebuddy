@@ -1,0 +1,17 @@
+groceries_march:
+  ledger: personal
+  category: groceries
+  month: "2026-03-01"
+  assigned: 600.00
+
+restaurants_march:
+  ledger: personal
+  category: restaurants
+  month: "2026-03-01"
+  assigned: 200.00
+
+rent_march:
+  ledger: personal
+  category: rent
+  month: "2026-03-01"
+  assigned: 1500.00
