@@ -1,11 +1,11 @@
 class TransactionEntry < ApplicationRecord
   belongs_to :account
 
-  enum :entry_type, { expense: 0, income: 1, transfer: 2 }
-  enum :status, { uncleared: 0, cleared: 1, reconciled: 2, scheduled: 3 }
+  enum :entry_type, {expense: 0, income: 1, transfer: 2}
+  enum :status, {uncleared: 0, cleared: 1, reconciled: 2, scheduled: 3}
 
   validates :date, presence: true
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, numericality: {greater_than: 0}
   validates :entry_type, presence: true
 
   scope :newest_first, -> { order(date: :desc, created_at: :desc) }
@@ -19,7 +19,7 @@ class TransactionEntry < ApplicationRecord
     expense_type = entry_types[:expense]
     income_type = entry_types[:income]
 
-    params = { scheduled: scheduled_status, balance: current_balance, expense: expense_type, income: income_type }
+    params = {scheduled: scheduled_status, balance: current_balance, expense: expense_type, income: income_type}
 
     select(
       "transaction_entries.*",
@@ -73,6 +73,6 @@ class TransactionEntry < ApplicationRecord
   private
 
   def format_currency(value)
-    "$#{ActiveSupport::NumberHelper.number_to_delimited(format('%.2f', value), delimiter: ',')}"
+    "$#{ActiveSupport::NumberHelper.number_to_delimited(format("%.2f", value), delimiter: ",")}"
   end
 end
