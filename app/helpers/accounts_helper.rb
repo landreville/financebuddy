@@ -19,9 +19,9 @@ module AccountsHelper
 
   def format_balance(amount)
     if amount.negative?
-      "-$#{ActiveSupport::NumberHelper.number_to_delimited(format('%.2f', amount.abs), delimiter: ',')}"
+      "-$#{ActiveSupport::NumberHelper.number_to_delimited(format("%.2f", amount.abs), delimiter: ",")}"
     else
-      "$#{ActiveSupport::NumberHelper.number_to_delimited(format('%.2f', amount), delimiter: ',')}"
+      "$#{ActiveSupport::NumberHelper.number_to_delimited(format("%.2f", amount), delimiter: ",")}"
     end
   end
 
@@ -53,7 +53,7 @@ module AccountsHelper
     cleared = compute_net_amount(cleared_entries)
     uncleared = compute_net_amount(uncleared_entries)
 
-    { cleared: cleared, uncleared: uncleared, balance: account.balance }
+    {cleared: cleared, uncleared: uncleared, balance: account.balance}
   end
 
   def running_balance_css_class(entry)

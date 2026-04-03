@@ -1,6 +1,6 @@
 class Account < ApplicationRecord
-  enum :account_type, { cash: 0, credit: 1, loan: 2, investment: 3 }
-  enum :budget_status, { on_budget: 0, tracking: 1 }
+  enum :account_type, {cash: 0, credit: 1, loan: 2, investment: 3}
+  enum :budget_status, {on_budget: 0, tracking: 1}
 
   validates :name, presence: true
   validates :account_type, presence: true
