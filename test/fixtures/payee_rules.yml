@@ -1,0 +1,6 @@
+loblaws_groceries:
+  ledger: personal
+  payee: loblaws
+  category: groceries
+  match_type: exact
+  pattern: Loblaws
