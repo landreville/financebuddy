@@ -1,0 +1,11 @@
+loblaws:
+  ledger: personal
+  name: Loblaws
+
+employer:
+  ledger: personal
+  name: Acme Corp
+
+landlord:
+  ledger: personal
+  name: Landlord

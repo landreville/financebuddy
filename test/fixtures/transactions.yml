@@ -1,0 +1,28 @@
+_fixture:
+  model_class: TransactionEntry
+
+grocery_expense:
+  ledger: personal
+  date: "2026-03-15"
+  payee: loblaws
+  memo: "Weekly groceries"
+  status: cleared
+  entry_type: expense
+  approved: true
+
+paycheque:
+  ledger: personal
+  date: "2026-03-01"
+  payee: employer
+  memo: "March salary"
+  status: cleared
+  entry_type: income
+  approved: true
+
+savings_transfer:
+  ledger: personal
+  date: "2026-03-05"
+  memo: "Monthly savings"
+  status: cleared
+  entry_type: transfer
+  approved: true
