@@ -3,12 +3,11 @@ require "test_helper"
 class LedgerMembershipTest < ActiveSupport::TestCase
   test "valid membership" do
     membership = LedgerMembership.new(
-      ledger: ledgers(:personal),
+      ledger: ledgers(:business),
       user: users(:jason),
       role: "member"
     )
-    # Can't test validity directly since fixture already creates jason+personal
-    # Instead test a fresh combo would work
+    assert membership.valid?
   end
 
   test "requires ledger" do

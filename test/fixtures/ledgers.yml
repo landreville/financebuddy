@@ -1,3 +1,7 @@
 personal:
   name: Personal Budget
   currency: CAD
+
+business:
+  name: Business Budget
+  currency: CAD

@@ -1,9 +1,9 @@
 class CreateRecurringTransactions < ActiveRecord::Migration[8.0]
   def change
     create_table :recurring_transactions do |t|
-      t.references :ledger, null: false, foreign_key: { on_delete: :cascade }
+      t.references :ledger, null: false, foreign_key: {on_delete: :cascade}
       t.references :account, null: false, foreign_key: true
-      t.references :transfer_account, null: true, foreign_key: { to_table: :accounts }
+      t.references :transfer_account, null: true, foreign_key: {to_table: :accounts}
       t.references :payee, null: true, foreign_key: true
       t.references :category, null: true, foreign_key: true
       t.string :entry_type, null: false

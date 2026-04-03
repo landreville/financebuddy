@@ -9,9 +9,9 @@ class RecurringTransaction < ApplicationRecord
   belongs_to :category, optional: true
   has_many :transaction_entries, dependent: :nullify
 
-  validates :entry_type, presence: true, inclusion: { in: ENTRY_TYPES }
-  validates :amount, presence: true, numericality: { greater_than: 0 }
-  validates :frequency, presence: true, inclusion: { in: FREQUENCIES }
+  validates :entry_type, presence: true, inclusion: {in: ENTRY_TYPES}
+  validates :amount, presence: true, numericality: {greater_than: 0}
+  validates :frequency, presence: true, inclusion: {in: FREQUENCIES}
   validates :start_date, presence: true
   validates :next_due_date, presence: true
 end

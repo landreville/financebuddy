@@ -6,7 +6,7 @@ class PayeeRule < ApplicationRecord
   belongs_to :category
 
   validates :pattern, presence: true
-  validates :match_type, presence: true, inclusion: { in: MATCH_TYPES }
+  validates :match_type, presence: true, inclusion: {in: MATCH_TYPES}
 
   attribute :match_type, default: "exact"
 end
