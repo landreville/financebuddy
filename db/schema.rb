@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_28_004535) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_004904) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -80,6 +80,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004535) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payees", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ledger_id", "name"], name: "index_payees_on_ledger_id_and_name", unique: true
+    t.index ["ledger_id"], name: "index_payees_on_ledger_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -89,20 +98,36 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004535) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
-  create_table "transaction_entries", force: :cascade do |t|
+  create_table "transaction_lines", force: :cascade do |t|
+    t.bigint "transaction_entry_id", null: false
     t.bigint "account_id", null: false
-    t.date "date", null: false
-    t.decimal "amount", precision: 15, scale: 2, null: false
-    t.integer "entry_type", null: false
-    t.integer "status", default: 0, null: false
-    t.string "payee"
-    t.string "category"
-    t.string "memo"
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "date"], name: "index_transaction_entries_on_account_id_and_date"
-    t.index ["account_id"], name: "index_transaction_entries_on_account_id"
-    t.index ["status"], name: "index_transaction_entries_on_status"
+    t.index ["account_id"], name: "index_transaction_lines_on_account_id"
+    t.index ["transaction_entry_id"], name: "index_transaction_lines_on_transaction_entry_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "ledger_id", null: false
+    t.date "date", null: false
+    t.bigint "payee_id"
+    t.text "memo"
+    t.string "status", default: "uncleared", null: false
+    t.string "entry_type", null: false
+    t.boolean "approved", default: true, null: false
+    t.bigint "recurring_transaction_id"
+    t.string "bank_fitid"
+    t.date "bank_posted_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ledger_id", "bank_fitid"], name: "index_transactions_on_ledger_id_and_bank_fitid"
+    t.index ["ledger_id", "date"], name: "index_transactions_on_ledger_id_and_date"
+    t.index ["ledger_id", "payee_id"], name: "index_transactions_on_ledger_id_and_payee_id"
+    t.index ["ledger_id"], name: "index_transactions_on_ledger_id"
+    t.index ["payee_id"], name: "index_transactions_on_payee_id"
+    t.index ["recurring_transaction_id"], name: "index_transactions_on_recurring_transaction_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -121,6 +146,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_28_004535) do
   add_foreign_key "category_groups", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "ledgers", on_delete: :cascade
   add_foreign_key "ledger_memberships", "users"
+  add_foreign_key "payees", "ledgers", on_delete: :cascade
   add_foreign_key "sessions", "users"
-  add_foreign_key "transaction_entries", "accounts"
+  add_foreign_key "transaction_lines", "accounts", on_delete: :restrict
+  add_foreign_key "transaction_lines", "transactions", column: "transaction_entry_id", on_delete: :cascade
+  add_foreign_key "transactions", "ledgers", on_delete: :cascade
+  add_foreign_key "transactions", "payees", on_delete: :nullify
 end
