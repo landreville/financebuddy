@@ -54,4 +54,31 @@ rrsp = Account.create!(
   on_budget: false, display_order: 0
 )
 
-puts "Seeded #{Account.count} accounts."
+puts "Creating categories..."
+CATEGORY_TAXONOMY = {
+  "Housing" => ["Mortgage/Rent", "Property Tax", "Electricity", "Natural Gas", "Internet", "Phone", "House Insurance", "Housekeeping"],
+  "Food" => ["Groceries", "Restaurants", "Alcohol"],
+  "Transportation" => ["Public Transit", "Gas", "Taxi"],
+  "Personal" => ["Pets", "Software", "Miscellaneous"],
+  "Recreation" => ["Night/Day Out", "Entertainment"],
+  "Savings" => ["Emergency Fund", "Retirement"],
+  "Work" => ["Expenses"]
+}.freeze
+
+categories = {}
+CATEGORY_TAXONOMY.each_with_index do |(group_name, cat_names), group_idx|
+  group = CategoryGroup.create!(ledger: ledger, name: group_name, display_order: group_idx)
+  cat_names.each_with_index do |cat_name, cat_idx|
+    expense_acct = Account.create!(
+      ledger: ledger, name: cat_name, account_type: "expense",
+      on_budget: false, display_order: cat_idx
+    )
+    Category.create!(
+      ledger: ledger, category_group: group, account: expense_acct,
+      name: cat_name, display_order: cat_idx
+    )
+    categories[cat_name] = expense_acct
+  end
+end
+
+puts "Seeded #{Account.count} accounts, #{Category.count} categories."
