@@ -220,6 +220,55 @@ start_date = Date.new(2021, 4, 1)
     )
   end
 
+  # ── CC payments from previous month (5th and 8th) ─────────
+  if month_offset > 0 && prev_northbrook_cc_spend > 0.01
+    create_transfer(
+      ledger: ledger, date: Date.new(year, month, 5),
+      from_account: chequing, to_account: northbrook_cc,
+      amount: prev_northbrook_cc_spend.round(2), memo: "Credit card payment"
+    )
+  end
+  if month_offset > 0 && prev_summit_visa_spend > 0.01
+    create_transfer(
+      ledger: ledger, date: Date.new(year, month, 8),
+      from_account: chequing, to_account: summit_visa,
+      amount: prev_summit_visa_spend.round(2), memo: "Credit card payment"
+    )
+  end
+
+  # ── Fixed bills on Summit Visa ────────────────────────────
+  add_expense.call(Date.new(year, month, 3), payees["BrightNet"],              "Internet",        summit_visa, drift(110, year_index, noise: 0.02))
+  add_expense.call(Date.new(year, month, 3), payees["ClearConnect Mobile"],    "Phone",           summit_visa, drift(65,  year_index, noise: 0.02))
+  add_expense.call(Date.new(year, month, 3), payees["Maple Shield Insurance"], "House Insurance", summit_visa, drift(105, year_index, noise: 0.02))
+
+  # ── Software subscriptions on Summit Visa (2nd) ───────────
+  {"StreamFlix" => 27, "TuneCast" => 14, "CloudDrive" => 22, "Social Ads" => 4, "PrimeMember" => 11}.each do |payee_name, base|
+    add_expense.call(Date.new(year, month, 2), payees[payee_name], "Software", summit_visa, drift(base, year_index, noise: 0.03))
+  end
+
+  # ── Housekeeping on Northbrook CC (10th) ──────────────────
+  add_expense.call(Date.new(year, month, 10), payees["CleanHome Services"], "Housekeeping", northbrook_cc, drift(175, year_index, noise: 0.05))
+
+  # ── Utilities on Chequing ─────────────────────────────────
+  electricity_base = [11, 12, 1, 2].include?(month) ? 140 : 90
+  gas_base         = [11, 12, 1, 2].include?(month) ? 130 : 60
+
+  create_expense(
+    ledger: ledger, date: Date.new(year, month, 9),
+    payee: payees["Northbrook Hydro"], category_account: categories["Electricity"],
+    payment_account: chequing, amount: drift(electricity_base, year_index, noise: 0.08)
+  )
+  create_expense(
+    ledger: ledger, date: Date.new(year, month, 9),
+    payee: payees["City Gas Co."], category_account: categories["Natural Gas"],
+    payment_account: chequing, amount: drift(gas_base, year_index, noise: 0.10)
+  )
+  create_expense(
+    ledger: ledger, date: Date.new(year, month, 12),
+    payee: payees["Municipal Services"], category_account: categories["Property Tax"],
+    payment_account: chequing, amount: drift(650, year_index, noise: 0.01)
+  )
+
   prev_northbrook_cc_spend = curr_northbrook_cc_spend
   prev_summit_visa_spend   = curr_summit_visa_spend
 end
