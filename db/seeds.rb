@@ -1,5 +1,47 @@
 # db/seeds.rb
 
+def status_for(date)
+  days_ago = (Date.today - date).to_i
+  case days_ago
+  when (60..) then "reconciled"
+  when (14..) then "cleared"
+  else "uncleared"
+  end
+end
+
+def drift(base, year_index, noise: 0.15)
+  cost_of_living = 1.0 + (year_index * 0.015)
+  noise_factor = 1.0 + (rand * 2.0 * noise) - noise
+  (base * cost_of_living * noise_factor).round(2)
+end
+
+def create_expense(ledger:, date:, payee:, category_account:, payment_account:, amount:, memo: nil)
+  entry = TransactionEntry.create!(
+    ledger: ledger, date: date, payee: payee, memo: memo,
+    status: status_for(date), entry_type: "expense", approved: true
+  )
+  TransactionLine.create!(transaction_entry: entry, account: category_account, amount: amount.round(2))
+  TransactionLine.create!(transaction_entry: entry, account: payment_account, amount: -amount.round(2))
+end
+
+def create_transfer(ledger:, date:, from_account:, to_account:, amount:, memo: nil)
+  entry = TransactionEntry.create!(
+    ledger: ledger, date: date, memo: memo,
+    status: status_for(date), entry_type: "transfer", approved: true
+  )
+  TransactionLine.create!(transaction_entry: entry, account: to_account, amount: amount.round(2))
+  TransactionLine.create!(transaction_entry: entry, account: from_account, amount: -amount.round(2))
+end
+
+def create_income(ledger:, date:, payee:, cash_account:, revenue_account:, amount:, memo: nil)
+  entry = TransactionEntry.create!(
+    ledger: ledger, date: date, payee: payee, memo: memo,
+    status: status_for(date), entry_type: "income", approved: true
+  )
+  TransactionLine.create!(transaction_entry: entry, account: cash_account, amount: amount.round(2))
+  TransactionLine.create!(transaction_entry: entry, account: revenue_account, amount: -amount.round(2))
+end
+
 puts "Clearing existing data..."
 TransactionLine.destroy_all
 TransactionEntry.destroy_all
