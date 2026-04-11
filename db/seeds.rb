@@ -155,3 +155,73 @@ payees = {}
 end
 
 puts "Seeded #{Account.count} accounts, #{Category.count} categories, #{Payee.count} payees."
+puts "Generating 60 months of transactions..."
+
+prev_northbrook_cc_spend = 0.0
+prev_summit_visa_spend   = 0.0
+start_date = Date.new(2021, 4, 1)
+
+60.times do |month_offset|
+  date       = start_date >> month_offset
+  year       = date.year
+  month      = date.month
+  year_index = year - 2021
+
+  curr_northbrook_cc_spend = 0.0
+  curr_summit_visa_spend   = 0.0
+
+  puts "  #{year}-#{month.to_s.rjust(2, "0")}..." if month == 1 || month_offset == 0
+
+  # Helper lambda: create expense and track CC spending
+  add_expense = ->(exp_date, payee, cat_name, payment_account, amount) {
+    create_expense(
+      ledger: ledger, date: exp_date, payee: payee,
+      category_account: categories[cat_name],
+      payment_account: payment_account, amount: amount
+    )
+    curr_northbrook_cc_spend += amount if payment_account == northbrook_cc
+    curr_summit_visa_spend   += amount if payment_account == summit_visa
+  }
+
+  # ── Income (1st and 15th) ─────────────────────────────────
+  create_income(
+    ledger: ledger, date: Date.new(year, month, 1),
+    payee: payees["Meridian Tech Inc."], cash_account: chequing,
+    revenue_account: income_account,
+    amount: drift(2750, year_index, noise: 0.02), memo: "Salary deposit"
+  )
+  create_income(
+    ledger: ledger, date: Date.new(year, month, 15),
+    payee: payees["Meridian Tech Inc."], cash_account: chequing,
+    revenue_account: income_account,
+    amount: drift(2750, year_index, noise: 0.02), memo: "Salary deposit"
+  )
+
+  # ── Mortgage payment (21st) ───────────────────────────────
+  create_transfer(
+    ledger: ledger, date: Date.new(year, month, 21),
+    from_account: chequing, to_account: mortgage,
+    amount: 2500.00, memo: "Mortgage payment"
+  )
+
+  # ── Emergency Fund (28th) ─────────────────────────────────
+  create_transfer(
+    ledger: ledger, date: Date.new(year, month, 28),
+    from_account: chequing, to_account: savings,
+    amount: drift(400, year_index, noise: 0.20), memo: "Emergency fund"
+  )
+
+  # ── Annual RRSP contribution (February only) ──────────────
+  if month == 2
+    create_transfer(
+      ledger: ledger, date: Date.new(year, month, 20),
+      from_account: chequing, to_account: rrsp,
+      amount: drift(6000, year_index, noise: 0.05), memo: "RRSP contribution"
+    )
+  end
+
+  prev_northbrook_cc_spend = curr_northbrook_cc_spend
+  prev_summit_visa_spend   = curr_summit_visa_spend
+end
+
+puts "Generated #{TransactionEntry.count} transactions so far."
