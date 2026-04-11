@@ -49,3 +49,6 @@
 # Superpowers brainstorming sessions
 /.superpowers/
 .claude/
+
+# Git worktrees
+/.worktrees/
