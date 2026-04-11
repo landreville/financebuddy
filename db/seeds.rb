@@ -81,4 +81,35 @@ CATEGORY_TAXONOMY.each_with_index do |(group_name, cat_names), group_idx|
   end
 end
 
-puts "Seeded #{Account.count} accounts, #{Category.count} categories."
+puts "Creating payees..."
+CATEGORY_PAYEES = {
+  "Groceries"      => ["Green Valley Market", "Harvest Bulk Foods", "Cedar Farms", "The Cheese Cellar"],
+  "Restaurants"    => ["The Corner Diner", "Sunrise Cafe", "Spice Garden", "Noodle House", "The Pizza Co",
+                        "QuickBite Delivery", "Harbour Pub", "Morning Brew", "The Sandwich Board"],
+  "Alcohol"        => ["The Bottle Shop", "Fine Wine & Spirits"],
+  "Public Transit" => ["City Transit"],
+  "Gas"            => ["Citywide Fuel"],
+  "Taxi"           => ["RideShare"],
+  "Internet"       => ["BrightNet"],
+  "Phone"          => ["ClearConnect Mobile"],
+  "House Insurance"=> ["Maple Shield Insurance"],
+  "Electricity"    => ["Northbrook Hydro"],
+  "Natural Gas"    => ["City Gas Co."],
+  "Property Tax"   => ["Municipal Services"],
+  "Housekeeping"   => ["CleanHome Services"],
+  "Pets"           => ["Pawsome Pet Store", "Litter & More"],
+  "Software"       => ["StreamFlix", "TuneCast", "CloudDrive", "Social Ads", "PrimeMember"],
+  "Miscellaneous"  => ["Government Services", "The Pharmacy", "Home Goods", "Online Marketplace"],
+  "Entertainment"  => ["The Spa", "City Arena", "Metro Art Gallery"],
+  "Night/Day Out"  => ["Harbour Bar", "The Lounge", "Bistro de Ville"],
+  "Work"           => ["Work Hotel", "Airport Cafe", "Conference Meals"]
+}.freeze
+
+INCOME_PAYEES = ["Meridian Tech Inc.", "E-Transfer Received", "Event Refund"].freeze
+
+payees = {}
+(CATEGORY_PAYEES.values.flatten + INCOME_PAYEES).uniq.each do |name|
+  payees[name] = Payee.create!(ledger: ledger, name: name)
+end
+
+puts "Seeded #{Account.count} accounts, #{Category.count} categories, #{Payee.count} payees."
