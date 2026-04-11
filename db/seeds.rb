@@ -1,29 +1,57 @@
+# db/seeds.rb
+
 puts "Clearing existing data..."
+TransactionLine.destroy_all
 TransactionEntry.destroy_all
+RecurringTransaction.destroy_all
+BudgetAllocation.destroy_all
+PayeeRule.destroy_all
+Payee.destroy_all
+Category.destroy_all
+CategoryGroup.destroy_all
 Account.destroy_all
+LedgerMembership.destroy_all
+Session.destroy_all
+User.destroy_all
+Ledger.destroy_all
+
+puts "Creating ledger and user..."
+ledger = Ledger.create!(name: "Demo Budget", currency: "CAD")
+user = User.create!(email_address: "demo@example.com", password: "password", password_confirmation: "password")
+LedgerMembership.create!(ledger: ledger, user: user, role: "owner")
 
 puts "Creating accounts..."
-chequing = Account.create!(name: "Chequing", account_type: :cash, budget_status: :on_budget, balance: 3147.70)
-Account.create!(name: "Savings", account_type: :cash, budget_status: :on_budget, balance: 12500.00)
-Account.create!(name: "Visa", account_type: :credit, budget_status: :on_budget, balance: -420.15)
-Account.create!(name: "Mortgage", account_type: :loan, budget_status: :tracking, balance: -285000.00)
-Account.create!(name: "TFSA", account_type: :investment, budget_status: :tracking, balance: 8200.00)
-Account.create!(name: "RRSP", account_type: :investment, budget_status: :tracking, balance: 22000.00)
+_opening_balances = Account.create!(
+  ledger: ledger, name: "Opening Balances", account_type: "equity",
+  on_budget: false, display_order: 0
+)
+income_account = Account.create!(
+  ledger: ledger, name: "Income", account_type: "revenue",
+  on_budget: false, display_order: 0
+)
+chequing = Account.create!(
+  ledger: ledger, name: "Northbrook Chequing", account_type: "cash",
+  on_budget: true, display_order: 0
+)
+savings = Account.create!(
+  ledger: ledger, name: "Northbrook Savings", account_type: "cash",
+  on_budget: true, display_order: 1
+)
+northbrook_cc = Account.create!(
+  ledger: ledger, name: "Northbrook Credit Card", account_type: "credit",
+  on_budget: true, display_order: 0
+)
+summit_visa = Account.create!(
+  ledger: ledger, name: "Summit Visa", account_type: "credit",
+  on_budget: true, display_order: 1
+)
+mortgage = Account.create!(
+  ledger: ledger, name: "Northbrook Mortgage", account_type: "loan",
+  on_budget: false, display_order: 0
+)
+rrsp = Account.create!(
+  ledger: ledger, name: "Northbrook RRSP", account_type: "investment",
+  on_budget: false, display_order: 0
+)
 
-puts "Creating transactions for Chequing..."
-[
-  {date: "2026-03-25", amount: 1500, entry_type: :expense, status: :scheduled, payee: "Landlord", category: "Rent", memo: "April rent"},
-  {date: "2026-03-22", amount: 52.30, entry_type: :expense, status: :uncleared, payee: "Loblaws", category: "Groceries", memo: "Weekly shop"},
-  {date: "2026-03-21", amount: 4.25, entry_type: :expense, status: :cleared, payee: "Tim Hortons", category: "Coffee Shops"},
-  {date: "2026-03-20", amount: 3200, entry_type: :income, status: :cleared, payee: "Employer Inc.", memo: "Paycheque"},
-  {date: "2026-03-19", amount: 16.99, entry_type: :expense, status: :cleared, payee: "Netflix", category: "Subscriptions"},
-  {date: "2026-03-18", amount: 62.40, entry_type: :expense, status: :cleared, payee: "Shell", category: "Gas", memo: "Fill up"},
-  {date: "2026-03-15", amount: 187.43, entry_type: :expense, status: :reconciled, payee: "Costco", category: "Groceries", memo: "Bulk run"},
-  {date: "2026-03-14", amount: 128, entry_type: :expense, status: :reconciled, payee: "Presto", category: "Public Transit", memo: "Monthly reload"},
-  {date: "2026-03-12", amount: 34.99, entry_type: :expense, status: :reconciled, payee: "Canadian Tire", category: "General", memo: "Windshield wipers"},
-  {date: "2026-03-10", amount: 22.50, entry_type: :expense, status: :reconciled, payee: "Shoppers Drug Mart", category: "Pharmacy", memo: "Prescription"}
-].each do |attrs|
-  chequing.transaction_entries.create!(attrs)
-end
-
-puts "Seeded #{Account.count} accounts and #{TransactionEntry.count} transactions."
+puts "Seeded #{Account.count} accounts."
