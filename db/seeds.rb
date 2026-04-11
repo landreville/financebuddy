@@ -269,6 +269,126 @@ start_date = Date.new(2021, 4, 1)
     payment_account: chequing, amount: drift(650, year_index, noise: 0.01)
   )
 
+  # ── Variable expenses ─────────────────────────────────────
+  days_in_month = Date.new(year, month, -1).day
+  dec_mult = (month == 12) ? 1.3 : 1.0
+
+  # Groceries: 4-5 trips, split between CCs
+  rand(4..5).times do
+    cc = [northbrook_cc, summit_visa].sample
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Groceries"].sample],
+      "Groceries", cc,
+      drift(70, year_index)
+    )
+  end
+
+  # Restaurants: 7-12 transactions
+  rand(7..12).times do
+    cc = [northbrook_cc, summit_visa].sample
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Restaurants"].sample],
+      "Restaurants", cc,
+      drift(25, year_index) * dec_mult
+    )
+  end
+
+  # Alcohol: 1-3 transactions
+  rand(1..3).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Alcohol"].sample],
+      "Alcohol", northbrook_cc,
+      drift(35, year_index)
+    )
+  end
+
+  # Public Transit: 6-10 top-ups
+  rand(6..10).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees["City Transit"],
+      "Public Transit", northbrook_cc,
+      drift(6.60, year_index, noise: 0.05)
+    )
+  end
+
+  # Gas: 1-3 fill-ups
+  rand(1..3).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees["Citywide Fuel"],
+      "Gas", northbrook_cc,
+      drift(65, year_index)
+    )
+  end
+
+  # Taxi: 0-3 rides
+  rand(0..3).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees["RideShare"],
+      "Taxi", summit_visa,
+      drift(22, year_index)
+    )
+  end
+
+  # Pets: 0-2 transactions
+  rand(0..2).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Pets"].sample],
+      "Pets", summit_visa,
+      drift(75, year_index)
+    )
+  end
+
+  # Miscellaneous: 1-4 transactions
+  rand(1..4).times do
+    cc = [northbrook_cc, summit_visa].sample
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Miscellaneous"].sample],
+      "Miscellaneous", cc,
+      drift(45, year_index)
+    )
+  end
+
+  # Entertainment: 1-2 per month (higher Dec)
+  rand(1..2).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Entertainment"].sample],
+      "Entertainment", summit_visa,
+      drift(90, year_index) * dec_mult
+    )
+  end
+
+  # Night/Day Out: 1-3 per month (higher Dec)
+  rand(1..3).times do
+    add_expense.call(
+      Date.new(year, month, rand(1..days_in_month)),
+      payees[CATEGORY_PAYEES["Night/Day Out"].sample],
+      "Night/Day Out", northbrook_cc,
+      drift(55, year_index) * dec_mult
+    )
+  end
+
+  # Work expenses: 0-3 (weekdays only — approximate with Mon-Fri days)
+  rand(0..3).times do
+    day = rand(1..days_in_month)
+    day += 1 while day < days_in_month && (Date.new(year, month, day).saturday? || Date.new(year, month, day).sunday?)
+    day = [day, days_in_month].min
+    add_expense.call(
+      Date.new(year, month, day),
+      payees[CATEGORY_PAYEES["Work"].sample],
+      "Expenses", northbrook_cc,
+      drift(35, year_index)
+    )
+  end
+
   prev_northbrook_cc_spend = curr_northbrook_cc_spend
   prev_summit_visa_spend = curr_summit_visa_spend
 end
