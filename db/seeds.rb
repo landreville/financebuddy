@@ -125,26 +125,26 @@ end
 
 puts "Creating payees..."
 CATEGORY_PAYEES = {
-  "Groceries"      => ["Green Valley Market", "Harvest Bulk Foods", "Cedar Farms", "The Cheese Cellar"],
-  "Restaurants"    => ["The Corner Diner", "Sunrise Cafe", "Spice Garden", "Noodle House", "The Pizza Co",
-                        "QuickBite Delivery", "Harbour Pub", "Morning Brew", "The Sandwich Board"],
-  "Alcohol"        => ["The Bottle Shop", "Fine Wine & Spirits"],
+  "Groceries" => ["Green Valley Market", "Harvest Bulk Foods", "Cedar Farms", "The Cheese Cellar"],
+  "Restaurants" => ["The Corner Diner", "Sunrise Cafe", "Spice Garden", "Noodle House", "The Pizza Co",
+    "QuickBite Delivery", "Harbour Pub", "Morning Brew", "The Sandwich Board"],
+  "Alcohol" => ["The Bottle Shop", "Fine Wine & Spirits"],
   "Public Transit" => ["City Transit"],
-  "Gas"            => ["Citywide Fuel"],
-  "Taxi"           => ["RideShare"],
-  "Internet"       => ["BrightNet"],
-  "Phone"          => ["ClearConnect Mobile"],
-  "House Insurance"=> ["Maple Shield Insurance"],
-  "Electricity"    => ["Northbrook Hydro"],
-  "Natural Gas"    => ["City Gas Co."],
-  "Property Tax"   => ["Municipal Services"],
-  "Housekeeping"   => ["CleanHome Services"],
-  "Pets"           => ["Pawsome Pet Store", "Litter & More"],
-  "Software"       => ["StreamFlix", "TuneCast", "CloudDrive", "Social Ads", "PrimeMember"],
-  "Miscellaneous"  => ["Government Services", "The Pharmacy", "Home Goods", "Online Marketplace"],
-  "Entertainment"  => ["The Spa", "City Arena", "Metro Art Gallery"],
-  "Night/Day Out"  => ["Harbour Bar", "The Lounge", "Bistro de Ville"],
-  "Work"           => ["Work Hotel", "Airport Cafe", "Conference Meals"]
+  "Gas" => ["Citywide Fuel"],
+  "Taxi" => ["RideShare"],
+  "Internet" => ["BrightNet"],
+  "Phone" => ["ClearConnect Mobile"],
+  "House Insurance" => ["Maple Shield Insurance"],
+  "Electricity" => ["Northbrook Hydro"],
+  "Natural Gas" => ["City Gas Co."],
+  "Property Tax" => ["Municipal Services"],
+  "Housekeeping" => ["CleanHome Services"],
+  "Pets" => ["Pawsome Pet Store", "Litter & More"],
+  "Software" => ["StreamFlix", "TuneCast", "CloudDrive", "Social Ads", "PrimeMember"],
+  "Miscellaneous" => ["Government Services", "The Pharmacy", "Home Goods", "Online Marketplace"],
+  "Entertainment" => ["The Spa", "City Arena", "Metro Art Gallery"],
+  "Night/Day Out" => ["Harbour Bar", "The Lounge", "Bistro de Ville"],
+  "Work" => ["Work Hotel", "Airport Cafe", "Conference Meals"]
 }.freeze
 
 INCOME_PAYEES = ["Meridian Tech Inc.", "E-Transfer Received", "Event Refund"].freeze
@@ -158,17 +158,17 @@ puts "Seeded #{Account.count} accounts, #{Category.count} categories, #{Payee.co
 puts "Generating 60 months of transactions..."
 
 prev_northbrook_cc_spend = 0.0
-prev_summit_visa_spend   = 0.0
+prev_summit_visa_spend = 0.0
 start_date = Date.new(2021, 4, 1)
 
 60.times do |month_offset|
-  date       = start_date >> month_offset
-  year       = date.year
-  month      = date.month
+  date = start_date >> month_offset
+  year = date.year
+  month = date.month
   year_index = year - 2021
 
   curr_northbrook_cc_spend = 0.0
-  curr_summit_visa_spend   = 0.0
+  curr_summit_visa_spend = 0.0
 
   puts "  #{year}-#{month.to_s.rjust(2, "0")}..." if month == 1 || month_offset == 0
 
@@ -180,7 +180,7 @@ start_date = Date.new(2021, 4, 1)
       payment_account: payment_account, amount: amount
     )
     curr_northbrook_cc_spend += amount if payment_account == northbrook_cc
-    curr_summit_visa_spend   += amount if payment_account == summit_visa
+    curr_summit_visa_spend += amount if payment_account == summit_visa
   }
 
   # ── Income (1st and 15th) ─────────────────────────────────
@@ -237,8 +237,8 @@ start_date = Date.new(2021, 4, 1)
   end
 
   # ── Fixed bills on Summit Visa ────────────────────────────
-  add_expense.call(Date.new(year, month, 3), payees["BrightNet"],              "Internet",        summit_visa, drift(110, year_index, noise: 0.02))
-  add_expense.call(Date.new(year, month, 3), payees["ClearConnect Mobile"],    "Phone",           summit_visa, drift(65,  year_index, noise: 0.02))
+  add_expense.call(Date.new(year, month, 3), payees["BrightNet"], "Internet", summit_visa, drift(110, year_index, noise: 0.02))
+  add_expense.call(Date.new(year, month, 3), payees["ClearConnect Mobile"], "Phone", summit_visa, drift(65, year_index, noise: 0.02))
   add_expense.call(Date.new(year, month, 3), payees["Maple Shield Insurance"], "House Insurance", summit_visa, drift(105, year_index, noise: 0.02))
 
   # ── Software subscriptions on Summit Visa (2nd) ───────────
@@ -251,7 +251,7 @@ start_date = Date.new(2021, 4, 1)
 
   # ── Utilities on Chequing ─────────────────────────────────
   electricity_base = [11, 12, 1, 2].include?(month) ? 140 : 90
-  gas_base         = [11, 12, 1, 2].include?(month) ? 130 : 60
+  gas_base = [11, 12, 1, 2].include?(month) ? 130 : 60
 
   create_expense(
     ledger: ledger, date: Date.new(year, month, 9),
@@ -270,7 +270,7 @@ start_date = Date.new(2021, 4, 1)
   )
 
   prev_northbrook_cc_spend = curr_northbrook_cc_spend
-  prev_summit_visa_spend   = curr_summit_visa_spend
+  prev_summit_visa_spend = curr_summit_visa_spend
 end
 
 puts "Generated #{TransactionEntry.count} transactions so far."
