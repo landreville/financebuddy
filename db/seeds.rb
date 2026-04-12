@@ -393,4 +393,23 @@ start_date = Date.new(2021, 4, 1)
   prev_summit_visa_spend = curr_summit_visa_spend
 end
 
-puts "Generated #{TransactionEntry.count} transactions so far."
+puts "Updating account balances..."
+TransactionLine.group(:account_id).sum(:amount).each do |account_id, total|
+  Account.where(id: account_id).update_all(balance: total.round(2))
+end
+
+TransactionLine
+  .joins(:transaction_entry)
+  .where(transactions: {status: %w[cleared reconciled]})
+  .group(:account_id)
+  .sum("transaction_lines.amount")
+  .each do |account_id, total|
+    Account.where(id: account_id).update_all(cleared_balance: total.round(2))
+  end
+
+puts "Done. Seeded:"
+puts "  #{Ledger.count} ledger, #{User.count} user"
+puts "  #{Account.count} accounts, #{Category.count} categories, #{Payee.count} payees"
+puts "  #{TransactionEntry.count} transactions (#{TransactionLine.count} lines)"
+puts ""
+puts "Log in at http://localhost:3000 with demo@example.com / password"
