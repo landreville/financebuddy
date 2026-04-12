@@ -1,0 +1,46 @@
+.fb-login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2.5rem;
+  background: $fb-content-bg;
+  border: 1px solid $fb-border;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  &__title {
+    font-family: $fb-font-heading;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $fb-text-primary;
+    margin-bottom: 1.5rem;
+  }
+
+  &__form {
+    .form-label {
+      font-family: $fb-font-body;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $fb-text-tertiary;
+    }
+
+    .form-control {
+      border-color: $fb-border;
+      font-size: 0.9375rem;
+
+      &:focus {
+        border-color: $fb-accent-blue;
+        box-shadow: 0 0 0 3px rgba($fb-accent-blue, 0.15);
+      }
+    }
+  }
+
+  &__forgot {
+    font-size: 0.8125rem;
+    color: $fb-accent-blue;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
