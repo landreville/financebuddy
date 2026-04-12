@@ -1,11 +1,32 @@
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-<%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
+<div class="d-flex justify-content-center align-items-center w-100">
+  <div class="fb-login-card">
+    <h1 class="fb-login-card__title">Sign in</h1>
 
-<%= form_with url: session_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
-<br>
+    <% if flash[:alert] %>
+      <div class="alert alert-danger py-2"><%= flash[:alert] %></div>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="alert alert-success py-2"><%= flash[:notice] %></div>
+    <% end %>
 
-<%= link_to "Forgot password?", new_password_path %>
+    <%= form_with url: session_path, class: "fb-login-card__form" do |form| %>
+      <div class="mb-3">
+        <%= form.label :email_address, "Email", class: "form-label" %>
+        <%= form.email_field :email_address, required: true, autofocus: true,
+              autocomplete: "username", placeholder: "you@example.com",
+              value: params[:email_address], class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-baseline">
+          <%= form.label :password, "Password", class: "form-label mb-0" %>
+          <%= link_to "Forgot password?", new_password_path, class: "fb-login-card__forgot" %>
+        </div>
+        <%= form.password_field :password, required: true, autocomplete: "current-password",
+              placeholder: "••••••••", maxlength: 72, class: "form-control" %>
+      </div>
+
+      <%= form.submit "Sign in", class: "btn btn-primary w-100" %>
+    <% end %>
+  </div>
+</div>
