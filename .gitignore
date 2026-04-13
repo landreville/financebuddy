@@ -52,3 +52,6 @@
 
 # Git worktrees
 /.worktrees/
+
+# Playwright 
+/.playwright-mcp

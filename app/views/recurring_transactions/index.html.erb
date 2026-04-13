@@ -1,0 +1,36 @@
+<div class="flex-grow-1 overflow-auto p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="mb-0" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700;">Recurring</h1>
+  </div>
+
+  <div style="background: #fff; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden;">
+    <div class="fb-table__header">
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--date">Next Due</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--payee">Payee</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--category">Account</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--memo">Frequency</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--inflow">Amount</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--category">Type</div>
+    </div>
+    <div class="fb-table__body">
+      <% @recurring.each do |rec| %>
+        <% overdue = rec.next_due_date < Date.today %>
+        <div class="fb-table__row">
+          <div class="fb-table__cell fb-table__cell--date" style="<%= overdue ? 'color: #c92a2a; font-weight: 600;' : '' %>">
+            <%= rec.next_due_date.strftime("%Y-%m-%d") %>
+          </div>
+          <div class="fb-table__cell fb-table__cell--payee"><%= rec.payee&.name || "—" %></div>
+          <div class="fb-table__cell fb-table__cell--category"><%= rec.account.name %></div>
+          <div class="fb-table__cell fb-table__cell--memo"><%= rec.frequency.titleize %></div>
+          <div class="fb-table__cell fb-table__cell--inflow fb-table__cell--money">
+            <%= number_to_currency(rec.amount, unit: "$") %>
+          </div>
+          <div class="fb-table__cell fb-table__cell--category"><%= rec.entry_type.titleize %></div>
+        </div>
+      <% end %>
+      <% if @recurring.empty? %>
+        <div class="p-4 text-center" style="color: #868e96;">No recurring transactions set up.</div>
+      <% end %>
+    </div>
+  </div>
+</div>

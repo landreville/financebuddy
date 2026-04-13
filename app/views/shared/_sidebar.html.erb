@@ -1,0 +1,19 @@
+<nav class="fb-sidebar">
+  <% sidebar_accounts.group_by(&:account_type).each do |type, accounts| %>
+    <div class="fb-sidebar__section-label fb-sidebar__section-label--budget">
+      <%= type.titleize %>
+    </div>
+    <div class="fb-sidebar__account-list">
+      <% accounts.each do |acct| %>
+        <%= link_to account_path(acct),
+              class: "fb-sidebar__account-row #{'fb-sidebar__account-row--selected' if local_assigns[:current_account]&.id == acct.id}" do %>
+          <span class="fb-sidebar__account-name"><%= acct.name %></span>
+          <span class="fb-sidebar__account-balance <%= acct.balance < 0 ? 'fb-sidebar__account-balance--negative' : 'fb-sidebar__account-balance--positive' %>">
+            <%= number_to_currency(acct.balance.abs, unit: "") %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="fb-sidebar__divider"></div>
+  <% end %>
+</nav>

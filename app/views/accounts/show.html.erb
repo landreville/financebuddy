@@ -1,0 +1,54 @@
+<%= render "shared/sidebar", sidebar_accounts: @sidebar_accounts, current_account: @account %>
+
+<div class="fb-register">
+  <div class="fb-account-header">
+    <div>
+      <span class="fb-account-header__name"><%= @account.name %></span>
+      <span class="fb-account-header__type"><%= @account.account_type.titleize %></span>
+    </div>
+    <div class="fb-account-header__balances">
+      <span class="fb-account-header__balance-item">
+        Cleared: <strong><%= number_to_currency(@account.cleared_balance, unit: "$") %></strong>
+      </span>
+      <span class="fb-account-header__balance-item">
+        Balance: <strong><%= number_to_currency(@account.balance, unit: "$") %></strong>
+      </span>
+    </div>
+  </div>
+
+  <div class="fb-table">
+    <div class="fb-table__header">
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--status"></div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--date">Date</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--payee">Payee</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--memo">Memo</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Outflow</div>
+      <div class="fb-table__cell fb-table__cell--header fb-table__cell--inflow">Inflow</div>
+    </div>
+    <div class="fb-table__body">
+      <% @transactions.each do |txn| %>
+        <% line = txn.transaction_lines.find { |l| l.account_id == @account.id } %>
+        <% next unless line %>
+        <div class="fb-table__row">
+          <div class="fb-table__cell fb-table__cell--status">
+            <span class="fb-status-dot fb-status-dot--<%= txn.status %>"></span>
+          </div>
+          <div class="fb-table__cell fb-table__cell--date"><%= txn.date.strftime("%Y-%m-%d") %></div>
+          <div class="fb-table__cell fb-table__cell--payee"><%= txn.payee&.name || txn.entry_type.titleize %></div>
+          <div class="fb-table__cell fb-table__cell--memo"><%= txn.memo %></div>
+          <% if line.amount < 0 %>
+            <div class="fb-table__cell fb-table__cell--outflow fb-table__cell--money fb-table__cell--negative">
+              <%= number_to_currency(line.amount.abs, unit: "") %>
+            </div>
+            <div class="fb-table__cell fb-table__cell--inflow"></div>
+          <% else %>
+            <div class="fb-table__cell fb-table__cell--outflow"></div>
+            <div class="fb-table__cell fb-table__cell--inflow fb-table__cell--money fb-table__cell--positive">
+              <%= number_to_currency(line.amount, unit: "") %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
