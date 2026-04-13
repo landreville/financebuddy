@@ -159,6 +159,7 @@ puts "Generating 60 months of transactions..."
 
 prev_northbrook_cc_spend = 0.0
 prev_summit_visa_spend = 0.0
+chequing_balance = 0.0
 start_date = Date.new(2021, 4, 1)
 
 60.times do |month_offset|
@@ -181,59 +182,75 @@ start_date = Date.new(2021, 4, 1)
     )
     curr_northbrook_cc_spend += amount if payment_account == northbrook_cc
     curr_summit_visa_spend += amount if payment_account == summit_visa
+    chequing_balance -= amount if payment_account == chequing
   }
 
   # ── Income (1st and 15th) ─────────────────────────────────
+  income_amount_1 = drift(2750, year_index, noise: 0.02)
   create_income(
     ledger: ledger, date: Date.new(year, month, 1),
     payee: payees["Meridian Tech Inc."], cash_account: chequing,
     revenue_account: income_account,
-    amount: drift(2750, year_index, noise: 0.02), memo: "Salary deposit"
+    amount: income_amount_1, memo: "Salary deposit"
   )
+  chequing_balance += income_amount_1
+
+  income_amount_2 = drift(2750, year_index, noise: 0.02)
   create_income(
     ledger: ledger, date: Date.new(year, month, 15),
     payee: payees["Meridian Tech Inc."], cash_account: chequing,
     revenue_account: income_account,
-    amount: drift(2750, year_index, noise: 0.02), memo: "Salary deposit"
+    amount: income_amount_2, memo: "Salary deposit"
   )
+  chequing_balance += income_amount_2
 
   # ── Mortgage payment (21st) ───────────────────────────────
+  mortgage_amount = 2500.00
   create_transfer(
     ledger: ledger, date: Date.new(year, month, 21),
     from_account: chequing, to_account: mortgage,
-    amount: 2500.00, memo: "Mortgage payment"
+    amount: mortgage_amount, memo: "Mortgage payment"
   )
+  chequing_balance -= mortgage_amount
 
   # ── Emergency Fund (28th) ─────────────────────────────────
+  emergency_fund_amount = drift(400, year_index, noise: 0.20)
   create_transfer(
     ledger: ledger, date: Date.new(year, month, 28),
     from_account: chequing, to_account: savings,
-    amount: drift(400, year_index, noise: 0.20), memo: "Emergency fund"
+    amount: emergency_fund_amount, memo: "Emergency fund"
   )
+  chequing_balance -= emergency_fund_amount
 
   # ── Annual RRSP contribution (February only) ──────────────
   if month == 2
+    rrsp_amount = drift(6000, year_index, noise: 0.05)
     create_transfer(
       ledger: ledger, date: Date.new(year, month, 20),
       from_account: chequing, to_account: rrsp,
-      amount: drift(6000, year_index, noise: 0.05), memo: "RRSP contribution"
+      amount: rrsp_amount, memo: "RRSP contribution"
     )
+    chequing_balance -= rrsp_amount
   end
 
   # ── CC payments from previous month (5th and 8th) ─────────
   if month_offset > 0 && prev_northbrook_cc_spend > 0.01
+    cc_payment_1 = prev_northbrook_cc_spend.round(2)
     create_transfer(
       ledger: ledger, date: Date.new(year, month, 5),
       from_account: chequing, to_account: northbrook_cc,
-      amount: prev_northbrook_cc_spend.round(2), memo: "Credit card payment"
+      amount: cc_payment_1, memo: "Credit card payment"
     )
+    chequing_balance -= cc_payment_1
   end
   if month_offset > 0 && prev_summit_visa_spend > 0.01
+    cc_payment_2 = prev_summit_visa_spend.round(2)
     create_transfer(
       ledger: ledger, date: Date.new(year, month, 8),
       from_account: chequing, to_account: summit_visa,
-      amount: prev_summit_visa_spend.round(2), memo: "Credit card payment"
+      amount: cc_payment_2, memo: "Credit card payment"
     )
+    chequing_balance -= cc_payment_2
   end
 
   # ── Fixed bills on Summit Visa ────────────────────────────
@@ -253,21 +270,29 @@ start_date = Date.new(2021, 4, 1)
   electricity_base = [11, 12, 1, 2].include?(month) ? 140 : 90
   gas_base = [11, 12, 1, 2].include?(month) ? 130 : 60
 
+  electricity_amount = drift(electricity_base, year_index, noise: 0.08)
   create_expense(
     ledger: ledger, date: Date.new(year, month, 9),
     payee: payees["Northbrook Hydro"], category_account: categories["Electricity"],
-    payment_account: chequing, amount: drift(electricity_base, year_index, noise: 0.08)
+    payment_account: chequing, amount: electricity_amount
   )
+  chequing_balance -= electricity_amount
+
+  gas_amount = drift(gas_base, year_index, noise: 0.10)
   create_expense(
     ledger: ledger, date: Date.new(year, month, 9),
     payee: payees["City Gas Co."], category_account: categories["Natural Gas"],
-    payment_account: chequing, amount: drift(gas_base, year_index, noise: 0.10)
+    payment_account: chequing, amount: gas_amount
   )
+  chequing_balance -= gas_amount
+
+  property_tax_amount = drift(650, year_index, noise: 0.01)
   create_expense(
     ledger: ledger, date: Date.new(year, month, 12),
     payee: payees["Municipal Services"], category_account: categories["Property Tax"],
-    payment_account: chequing, amount: drift(650, year_index, noise: 0.01)
+    payment_account: chequing, amount: property_tax_amount
   )
+  chequing_balance -= property_tax_amount
 
   # ── Variable expenses ─────────────────────────────────────
   days_in_month = Date.new(year, month, -1).day
@@ -406,6 +431,27 @@ TransactionLine
   .each do |account_id, total|
     Account.where(id: account_id).update_all(cleared_balance: total.round(2))
   end
+
+# Ensure chequing account has a positive balance
+puts "Ensuring chequing account has positive balance..."
+final_chequing_balance = Account.find(chequing.id).balance
+if final_chequing_balance <= 0
+  # Add a final income transaction to make it positive
+  adjustment_amount = [1000.00, (100 - final_chequing_balance).round(2)].max
+  create_income(
+    ledger: ledger,
+    date: Date.today,
+    payee: payees["E-Transfer Received"],
+    cash_account: chequing,
+    revenue_account: income_account,
+    amount: adjustment_amount,
+    memo: "Final balance adjustment"
+  )
+
+  # Update the chequing account balance to include the adjustment
+  Account.where(id: chequing.id).update_all(balance: (final_chequing_balance + adjustment_amount).round(2))
+  puts "  Added final adjustment of $#{adjustment_amount} to ensure positive balance"
+end
 
 puts "Done. Seeded:"
 puts "  #{Ledger.count} ledger, #{User.count} user"
