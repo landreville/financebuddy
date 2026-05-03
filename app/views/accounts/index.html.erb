@@ -1,4 +1,13 @@
 <%= render "shared/sidebar", sidebar_accounts: @sidebar_accounts %>
-<div class="flex-grow-1 d-flex align-items-center justify-content-center" style="color: #868e96;">
-  <p>No accounts found.</p>
+
+<div class="main">
+  <div class="main__head">
+    <div>
+      <h1 class="main__title">Accounts</h1>
+      <div class="main__sub">// Select an account to view transactions</div>
+    </div>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: center; flex: 1; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-size: var(--fz-sm);">
+    — Select an account from the sidebar —
+  </div>
 </div>

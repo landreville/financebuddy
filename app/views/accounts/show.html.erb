@@ -1,54 +1,91 @@
 <%= render "shared/sidebar", sidebar_accounts: @sidebar_accounts, current_account: @account %>
 
-<div class="fb-register">
-  <div class="fb-account-header">
+<div class="main">
+  <div class="main__head">
     <div>
-      <span class="fb-account-header__name"><%= @account.name %></span>
-      <span class="fb-account-header__type"><%= @account.account_type.titleize %></span>
+      <h1 class="main__title"><%= @account.name %></h1>
+      <div class="main__sub">// Working Balance · <%= fmt_money(@account.balance) %></div>
     </div>
-    <div class="fb-account-header__balances">
-      <span class="fb-account-header__balance-item">
-        Cleared: <strong><%= number_to_currency(@account.cleared_balance, unit: "$") %></strong>
-      </span>
-      <span class="fb-account-header__balance-item">
-        Balance: <strong><%= number_to_currency(@account.balance, unit: "$") %></strong>
-      </span>
+    <div class="main__balrow">
+      <div class="main__balcell cleared">
+        <div class="lbl">Cleared</div>
+        <div class="val"><%= fmt_money(@account.cleared_balance) %></div>
+      </div>
+      <div class="main__balcell uncleared">
+        <div class="lbl">Uncleared</div>
+        <div class="val"><%= fmt_money(@account.balance - @account.cleared_balance) %></div>
+      </div>
+      <div class="main__balcell">
+        <div class="lbl">Working</div>
+        <div class="val"><%= fmt_money(@account.balance) %></div>
+      </div>
     </div>
   </div>
 
-  <div class="fb-table">
-    <div class="fb-table__header">
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--status"></div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--date">Date</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--payee">Payee</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--memo">Memo</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Outflow</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--inflow">Inflow</div>
-    </div>
-    <div class="fb-table__body">
-      <% @transactions.each do |txn| %>
+  <div class="tb">
+    <%= link_to "＋ ADD TXN", "#", class: "btn btn--primary" %>
+    <button class="btn">EDIT</button>
+    <button class="btn">FILE ▾</button>
+    <input type="text" placeholder="search payees, memos, categories...">
+    <div class="spacer"></div>
+    <span class="meta"><%= @transactions.size %> rows</span>
+    <button class="btn">⇩ EXPORT</button>
+    <button class="btn">⟳ RECONCILE</button>
+  </div>
+
+  <div class="ledger">
+    <table>
+      <colgroup>
+        <col class="col-status">
+        <col class="col-date">
+        <col class="col-payee">
+        <col class="col-cat">
+        <col class="col-memo">
+        <col class="col-out">
+        <col class="col-in">
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="col-status">✓</th>
+          <th class="col-date">Date</th>
+          <th class="col-payee">Payee</th>
+          <th class="col-cat">Category</th>
+          <th class="col-memo">Memo</th>
+          <th class="col-out" style="text-align: right">Outflow</th>
+          <th class="col-in" style="text-align: right">Inflow</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @transactions.each do |txn| %>
         <% line = txn.transaction_lines.find { |l| l.account_id == @account.id } %>
         <% next unless line %>
-        <div class="fb-table__row">
-          <div class="fb-table__cell fb-table__cell--status">
-            <span class="fb-status-dot fb-status-dot--<%= txn.status %>"></span>
-          </div>
-          <div class="fb-table__cell fb-table__cell--date"><%= txn.date.strftime("%Y-%m-%d") %></div>
-          <div class="fb-table__cell fb-table__cell--payee"><%= txn.payee&.name || txn.entry_type.titleize %></div>
-          <div class="fb-table__cell fb-table__cell--memo"><%= txn.memo %></div>
+        <tr data-txn-id="<%= txn.id %>">
+          <td class="col-status">
+            <span class="st <%= txn.status == 'cleared' ? 'cleared' : (txn.status == 'reconciled' ? 'recon' : '') %>">
+              <%= txn.status == 'cleared' ? 'C' : (txn.status == 'reconciled' ? 'R' : '·') %>
+            </span>
+          </td>
+          <td class="col-date"><%= txn.date.strftime("%y-%m-%d") %></td>
+          <td class="col-payee"><%= txn.payee&.name || txn.entry_type.titleize %></td>
+          <td class="col-cat"><%= txn.category&.name || "—" %></td>
+          <td class="col-memo"><%= txn.memo %></td>
           <% if line.amount < 0 %>
-            <div class="fb-table__cell fb-table__cell--outflow fb-table__cell--money fb-table__cell--negative">
-              <%= number_to_currency(line.amount.abs, unit: "") %>
-            </div>
-            <div class="fb-table__cell fb-table__cell--inflow"></div>
+          <td class="col-out has"><%= fmt_money(line.amount.abs) %></td>
+          <td class="col-in"></td>
           <% else %>
-            <div class="fb-table__cell fb-table__cell--outflow"></div>
-            <div class="fb-table__cell fb-table__cell--inflow fb-table__cell--money fb-table__cell--positive">
-              <%= number_to_currency(line.amount, unit: "") %>
-            </div>
+          <td class="col-out"></td>
+          <td class="col-in has"><%= fmt_money(line.amount) %></td>
           <% end %>
-        </div>
-      <% end %>
-    </div>
+        </tr>
+        <% end %>
+        <% if @transactions.empty? %>
+        <tr>
+          <td colspan="7" style="padding: 24px; text-align: center; color: var(--muted);">
+            — NO TRANSACTIONS —
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>

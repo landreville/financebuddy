@@ -1,61 +1,50 @@
-<div class="flex-grow-1 overflow-auto p-4">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h1 class="mb-0" style="font-family: var(--fb-font-heading, 'Space Grotesk', sans-serif); font-size: 22px; font-weight: 700;">Dashboard</h1>
-    <span style="font-size: 13px; color: #868e96;"><%= Date.today.strftime("%B %Y") %></span>
+<div class="main" style="overflow: auto;">
+  <div class="main__head">
+    <div>
+      <h1 class="main__title">Dashboard</h1>
+      <div class="main__sub">// Snapshot · <%= Date.today.strftime("%d %b %Y") %></div>
+    </div>
   </div>
 
-  <%# Account summary cards %>
-  <div class="row g-3 mb-4">
+  <div class="kpi">
     <% @accounts.group_by(&:account_type).each do |type, accounts| %>
-      <div class="col-md-3">
-        <div class="p-3 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
-          <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #339af0; margin-bottom: 8px;">
-            <%= type.titleize %>
-          </div>
-          <% accounts.each do |acct| %>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <span style="font-size: 12px; color: #495057;"><%= acct.name %></span>
-              <span style="font-size: 12px; font-weight: 600; color: <%= acct.balance < 0 ? '#c92a2a' : '#212529' %>;">
-                <%= number_to_currency(acct.balance, unit: "$") %>
-              </span>
-            </div>
-          <% end %>
-        </div>
+    <div class="panel">
+      <div class="l"><%= type.titleize %></div>
+      <div class="v" style="color: <%= accounts.sum(&:balance) < 0 ? 'var(--red)' : 'var(--ink)' %>">
+        <%= fmt_money(accounts.sum(&:balance)) %>
       </div>
+    </div>
     <% end %>
-
-    <div class="col-md-3">
-      <div class="p-3 rounded h-100 d-flex flex-column justify-content-center" style="background: #212529; border: 1px solid #343a40;">
-        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #868e96; margin-bottom: 4px;">
-          Net Worth
-        </div>
-        <div style="font-size: 22px; font-weight: 700; color: <%= @net_worth >= 0 ? '#51cf66' : '#c92a2a' %>;">
-          <%= number_to_currency(@net_worth, unit: "$") %>
-        </div>
+    <div class="panel">
+      <div class="l">Net Worth</div>
+      <div class="v" style="color: <%= @net_worth < 0 ? 'var(--red)' : 'var(--ink)' %>">
+        <%= fmt_money(@net_worth) %>
       </div>
     </div>
   </div>
 
-  <%# Recent transactions %>
-  <div style="background: #fff; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden;">
-    <div class="px-3 py-2" style="background: #f1f3f5; border-bottom: 1px solid #dee2e6;">
-      <span style="font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 600; color: #495057; text-transform: uppercase; letter-spacing: 0.5px;">
-        Recent Transactions
-      </span>
-    </div>
-    <div class="fb-table__header">
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--date">Date</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--payee">Payee</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--category">Type</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--memo">Memo</div>
-    </div>
-    <% @recent_transactions.each do |txn| %>
-      <div class="fb-table__row">
-        <div class="fb-table__cell fb-table__cell--date"><%= txn.date.strftime("%b %d") %></div>
-        <div class="fb-table__cell fb-table__cell--payee"><%= txn.payee&.name || "—" %></div>
-        <div class="fb-table__cell fb-table__cell--category"><%= txn.entry_type.titleize %></div>
-        <div class="fb-table__cell fb-table__cell--memo"><%= txn.memo %></div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 12px 12px;">
+    <div class="panel">
+      <div class="panel__h">
+        <span>Recent Activity</span>
+        <span>Last 10</span>
       </div>
-    <% end %>
+      <div style="padding: 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: var(--fz-md);">
+          <tbody>
+            <% @recent_transactions.each do |txn| %>
+            <tr style="border-bottom: 1px dashed #DDDDDD;">
+              <td style="padding: 5px 10px; width: 90px; color: var(--muted)"><%= txn.date.strftime("%y-%m-%d") %></td>
+              <td style="padding: 5px 10px"><%= txn.payee&.name || "—" %></td>
+              <td style="padding: 5px 10px; color: var(--blue)"><%= txn.entry_type.titleize %></td>
+              <td style="padding: 5px 10px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted)">
+                <%= txn.memo %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

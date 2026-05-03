@@ -1,48 +1,81 @@
-<div class="flex-grow-1 overflow-auto p-4">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h1 class="mb-0" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700;">Budget</h1>
-    <div class="d-flex align-items-center gap-2">
-      <%= link_to "< Prev", budget_path(month: (@month << 1).to_s), class: "btn btn-sm btn-outline-secondary" %>
-      <span style="font-size: 14px; font-weight: 600;"><%= @month.strftime("%B %Y") %></span>
-      <%= link_to "Next >", budget_path(month: (@month >> 1).to_s), class: "btn btn-sm btn-outline-secondary" %>
+<div class="main" style="overflow: auto;">
+  <div class="main__head">
+    <div>
+      <h1 class="main__title">Budget · <%= @month.strftime("%B %Y") %></h1>
+      <div class="main__sub">// To Be Assigned · <%= fmt_money(0) %></div>
+    </div>
+    <div class="main__balrow">
+      <div class="main__balcell">
+        <div class="lbl">Budgeted</div>
+        <div class="val"><%= fmt_money(@category_groups.flat_map { |g| g.categories.where(archived: false) }.sum { |c| @allocations[c.id] || 0 }) %></div>
+      </div>
+      <div class="main__balcell uncleared">
+        <div class="lbl">Activity</div>
+        <div class="val"><%= fmt_money(-@category_groups.flat_map { |g| g.categories.where(archived: false) }.sum { |c| @activity[c.id] || 0 }) %></div>
+      </div>
+      <div class="main__balcell cleared">
+        <div class="lbl">Available</div>
+        <div class="val"><%= fmt_money(@category_groups.flat_map { |g| g.categories.where(archived: false) }.sum { |c| (@allocations[c.id] || 0) - (@activity[c.id] || 0) }) %></div>
+      </div>
     </div>
   </div>
 
-  <div style="background: #fff; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden;">
-    <div class="fb-table__header">
-      <div class="fb-table__cell fb-table__cell--header" style="flex: 3;">Category</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Assigned</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Activity</div>
-      <div class="fb-table__cell fb-table__cell--header fb-table__cell--outflow">Available</div>
-    </div>
+  <div class="tb">
+    <%= link_to "‹ PREV", budget_path(month: (@month << 1).to_s), class: "btn" %>
+    <button class="btn is-active"><%= @month.strftime("%b %Y").upcase %></button>
+    <%= link_to "NEXT ›", budget_path(month: (@month >> 1).to_s), class: "btn" %>
+    <div class="spacer"></div>
+    <button class="btn">＋ CATEGORY GROUP</button>
+    <button class="btn btn--primary">ASSIGN MONEY</button>
+  </div>
 
-    <% @category_groups.each do |group| %>
-      <div class="fb-table__row" style="background: #f1f3f5;">
-        <div class="fb-table__cell" style="flex: 3; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #339af0;">
-          <%= group.name %>
-        </div>
-        <div class="fb-table__cell fb-table__cell--outflow"></div>
-        <div class="fb-table__cell fb-table__cell--outflow"></div>
-        <div class="fb-table__cell fb-table__cell--outflow"></div>
-      </div>
-
-      <% group.categories.where(archived: false).order(:display_order, :name).each do |cat| %>
+  <div class="ledger">
+    <table>
+      <colgroup>
+        <col style="width: 38%">
+        <col style="width: 20%">
+        <col style="width: 20%">
+        <col style="width: 22%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th style="text-align: right">Budgeted</th>
+          <th style="text-align: right">Activity</th>
+          <th>Available</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @category_groups.each do |group| %>
+        <tr>
+          <td colspan="4" style="background: var(--paper-2); text-transform: uppercase; letter-spacing: 1.5px; font-size: var(--fz-xs); padding: 6px 10px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font-weight: 700;">
+            ▼ <%= group.name %>
+          </td>
+        </tr>
+        <% group.categories.where(archived: false).order(:display_order, :name).each do |cat| %>
         <% assigned = @allocations[cat.id] || 0 %>
         <% activity = @activity[cat.id] || 0 %>
         <% available = assigned - activity %>
-        <div class="fb-table__row">
-          <div class="fb-table__cell fb-table__cell--payee" style="flex: 3; padding-left: 20px;"><%= cat.name %></div>
-          <div class="fb-table__cell fb-table__cell--outflow fb-table__cell--money">
-            <%= number_to_currency(assigned, unit: "") %>
-          </div>
-          <div class="fb-table__cell fb-table__cell--outflow fb-table__cell--money <%= activity > 0 ? 'fb-table__cell--negative' : '' %>">
-            <%= activity > 0 ? number_to_currency(activity, unit: "") : "—" %>
-          </div>
-          <div class="fb-table__cell fb-table__cell--outflow fb-table__cell--money <%= available < 0 ? 'fb-table__cell--negative' : (available > 0 ? 'fb-table__cell--positive' : '') %>">
-            <%= number_to_currency(available, unit: "") %>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
+        <% pct = assigned > 0 ? [100, (activity.to_f / assigned * 100).round].min : 0 %>
+        <% over = activity > assigned %>
+        <tr>
+          <td><%= cat.name %></td>
+          <td style="text-align: right; font-variant-numeric: tabular-nums"><%= fmt_money(assigned) %></td>
+          <td style="text-align: right; font-variant-numeric: tabular-nums; color: <%= activity > 0 ? 'var(--red)' : 'var(--muted)' %>">
+            <%= activity > 0 ? "-#{fmt_money(activity)}" : "—" %>
+          </td>
+          <td>
+            <div style="display: grid; grid-template-columns: 1fr 80px; gap: 8px; align-items: center;">
+              <div class="bar <%= over ? 'over' : '' %>"><span style="width: <%= pct %>%"></span></div>
+              <span style="text-align: right; font-variant-numeric: tabular-nums; color: <%= available < 0 ? 'var(--red)' : 'var(--blue)' %>; font-weight: 700">
+                <%= fmt_money(available) %>
+              </span>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
