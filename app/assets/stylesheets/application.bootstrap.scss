@@ -1,9 +1,13 @@
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons';
-
+@import "bootstrap_overrides";
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";
 @import "variables";
-@import "components/top_nav";
+@import "components/base";
+@import "components/buttons";
+@import "components/effects";
+@import "components/header";
 @import "components/sidebar";
-@import "components/transaction_table";
-@import "components/legend_bar";
+@import "components/ledger";
+@import "components/status_bar";
+@import "components/panels";
 @import "components/session";

@@ -1,22 +1,25 @@
-// F-Buddy Color Palette
-$fb-nav-bg: #212529;
-$fb-sidebar-bg: #f8f9fa;
-$fb-content-bg: #ffffff;
-$fb-table-header-bg: #f1f3f5;
-$fb-zebra-row: #f8f9fa;
-$fb-selected-account: #e7f5ff;
-$fb-border: #dee2e6;
-$fb-scheduled-bg: #fcfcfc;
+:root {
+  --paper: #FFFFFF;
+  --paper-2: #F0F0F0;
+  --ink: #111111;
+  --ink-soft: #2A2A2A;
+  --rule: #111111;
+  --red: #C2272D;
+  --blue: #0046A8;
+  --white: #FFFFFF;
+  --muted: #6B6B6B;
 
-$fb-text-primary: #212529;
-$fb-text-secondary: #868e96;
-$fb-text-tertiary: #495057;
-$fb-accent-blue: #339af0;
-$fb-success-green: #51cf66;
-$fb-income-green: #2b8a3e;
-$fb-danger-red: #c92a2a;
-$fb-muted: #adb5bd;
+  --shadow-bevel-out: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #999999;
+  --shadow-bevel-in: inset 1px 1px 0 #999999, inset -1px -1px 0 #FFFFFF;
 
-// Typography
-$fb-font-heading: 'Space Grotesk', sans-serif;
-$fb-font-body: 'Inter', sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --font: var(--mono);
+
+  --fz-xs: 11px;
+  --fz-sm: 12px;
+  --fz-md: 13px;
+  --fz-lg: 16px;
+  --fz-xl: 22px;
+
+  --row-h: 26px;
+}

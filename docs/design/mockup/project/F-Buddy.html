@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>F-Buddy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Serif:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="theme.css">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="type-mono">
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "cyber": 25,
+  "type": "mono",
+  "crt": false
+}/*EDITMODE-END*/;
+
+const { useState: useS, useEffect: useE } = React;
+
+function App(){
+  const [screen, setScreen] = useS("Accounts");
+  const [activeAcct, setActiveAcct] = useS("checking");
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  // Apply tweaks to body
+  useE(() => {
+    document.body.classList.remove("type-sans","type-serif","type-mono");
+    document.body.classList.add(`type-${tweaks.type}`);
+    document.documentElement.style.setProperty("--cyber", tweaks.cyber/100);
+    document.body.classList.toggle("crt", tweaks.crt);
+  }, [tweaks]);
+
+  const cyber = tweaks.cyber / 100;
+
+  // Apply cyber intensity to several effects
+  useE(() => {
+    const root = document.documentElement;
+    // glitch animation speed inversely proportional to cyber level
+    const dur = cyber > 0 ? (4.5 - cyber * 3.5) : 0;
+    root.style.setProperty("--glitch-dur", dur ? `${dur}s` : "0s");
+    // caret blink
+    root.style.setProperty("--caret-blink", cyber > 0 ? `${1.2 - cyber*0.7}s` : "0s");
+    // accent neon hover
+    root.style.setProperty("--neon", cyber > 0.5 ? "#39FF14" : "var(--blue)");
+  }, [cyber]);
+
+  const txnCount = (window.TXNS_BY_ACCT[activeAcct] || []).length;
+
+  let body = null;
+  if (screen === "Accounts")  body = <AccountsScreen activeAcct={activeAcct} key={activeAcct} />;
+  if (screen === "Dashboard") body = <DashboardScreen />;
+  if (screen === "Budget")    body = <BudgetScreen />;
+  if (screen === "Reports")   body = <ReportsScreen />;
+  if (screen === "Recurring") body = <RecurringScreen />;
+
+  return (
+    <div className="app">
+      <Header screen={screen} setScreen={setScreen} />
+      <div className="body">
+        <Sidebar activeAcct={activeAcct} setActiveAcct={setActiveAcct} />
+        {body}
+      </div>
+      <StatusBar screen={screen} activeAcct={activeAcct} txnCount={txnCount} glitchOn={cyber>0} />
+
+      <TweaksPanel title="TWEAKS">
+        <TweakSection label="Aesthetic" />
+        <TweakSlider label="Cyberpunk intensity" value={tweaks.cyber}
+          min={0} max={100} step={5} unit="%"
+          onChange={(v) => setTweak('cyber', v)} />
+        <TweakRadio label="Typography" value={tweaks.type}
+          options={['mono','sans','serif']}
+          onChange={(v) => setTweak('type', v)} />
+        <TweakToggle label="CRT scanlines + vignette" value={tweaks.crt}
+          onChange={(v) => setTweak('crt', v)} />
+      </TweaksPanel>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+
+<style id="__cyber-overrides">
+  /* glitch + caret durations are driven by --glitch-dur / --caret-blink */
+</style>
+</body>
+</html>
