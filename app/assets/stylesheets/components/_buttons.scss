@@ -1,0 +1,53 @@
+.btn {
+  appearance: none;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  color: var(--ink);
+  padding: 3px 10px;
+  height: 26px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: var(--fz-xs);
+  box-shadow: var(--shadow-bevel-out);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  &:active, &.is-active {
+    box-shadow: var(--shadow-bevel-in);
+    background: var(--paper-2);
+  }
+
+  &--primary {
+    background: var(--red);
+    color: var(--paper);
+    box-shadow: var(--shadow-bevel-out);
+
+    &:hover {
+      background: #A11D22;
+      color: var(--paper);
+    }
+
+    &:active {
+      box-shadow: var(--shadow-bevel-in);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+
+    &:hover {
+      background: transparent;
+      text-decoration: underline;
+    }
+  }
+}
