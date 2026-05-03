@@ -2,45 +2,50 @@
   width: 100%;
   max-width: 400px;
   padding: 2.5rem;
-  background: $fb-content-bg;
-  border: 1px solid $fb-border;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  background: var(--white);
+  border: 1px solid var(--ink);
 
   &__title {
-    font-family: $fb-font-heading;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: $fb-text-primary;
+    font-size: var(--fz-xl);
+    font-weight: 700;
+    color: var(--ink);
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
   &__form {
     .form-label {
-      font-family: $fb-font-body;
-      font-size: 0.875rem;
+      font-size: var(--fz-xs);
       font-weight: 500;
-      color: $fb-text-tertiary;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .form-control {
-      border-color: $fb-border;
-      font-size: 0.9375rem;
+      border: 1px solid var(--ink);
+      font-size: var(--fz-md);
+      box-shadow: var(--shadow-bevel-in);
 
       &:focus {
-        border-color: $fb-accent-blue;
-        box-shadow: 0 0 0 3px rgba($fb-accent-blue, 0.15);
+        border-color: var(--blue);
+        box-shadow: var(--shadow-bevel-in), 0 0 0 1px var(--blue);
+        outline: 0;
       }
     }
   }
 
   &__forgot {
-    font-size: 0.8125rem;
-    color: $fb-accent-blue;
-    text-decoration: none;
+    font-size: var(--fz-xs);
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 
     &:hover {
-      text-decoration: underline;
+      background: var(--blue);
+      color: var(--paper);
+      text-decoration: none;
     }
   }
 }
