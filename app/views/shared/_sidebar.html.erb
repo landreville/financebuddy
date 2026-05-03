@@ -1,19 +1,28 @@
-<nav class="fb-sidebar">
-  <% sidebar_accounts.group_by(&:account_type).each do |type, accounts| %>
-    <div class="fb-sidebar__section-label fb-sidebar__section-label--budget">
-      <%= type.titleize %>
-    </div>
-    <div class="fb-sidebar__account-list">
+<aside class="side">
+  <div class="side__head">
+    <span>Accounts</span>
+    <span style="opacity: 0.6;">＋ NEW</span>
+  </div>
+  <div class="side__net">
+    <div class="lbl">Net Worth</div>
+    <div class="val"><%= fmt_money(sidebar_accounts.sum(&:balance)) %></div>
+  </div>
+  <div class="side__scroll">
+    <% sidebar_accounts.group_by(&:account_type).each do |type, accounts| %>
+    <div class="side__group">
+      <h4>
+        <span><span class="chev">▼</span> <%= type.titleize %></span>
+        <span class="total"><%= fmt_money(accounts.sum(&:balance)) %></span>
+      </h4>
       <% accounts.each do |acct| %>
-        <%= link_to account_path(acct),
-              class: "fb-sidebar__account-row #{'fb-sidebar__account-row--selected' if local_assigns[:current_account]&.id == acct.id}" do %>
-          <span class="fb-sidebar__account-name"><%= acct.name %></span>
-          <span class="fb-sidebar__account-balance <%= acct.balance < 0 ? 'fb-sidebar__account-balance--negative' : 'fb-sidebar__account-balance--positive' %>">
-            <%= number_to_currency(acct.balance.abs, unit: "") %>
-          </span>
-        <% end %>
+      <%= link_to account_path(acct), class: "side__acct #{'is-active' if local_assigns[:current_account]&.id == acct.id}" do %>
+        <span class="name"><%= acct.name %></span>
+        <span class="bal <%= acct.balance < 0 ? 'neg' : '' %>">
+          <%= fmt_money(acct.balance) %>
+        </span>
+      <% end %>
       <% end %>
     </div>
-    <div class="fb-sidebar__divider"></div>
-  <% end %>
-</nav>
+    <% end %>
+  </div>
+</aside>

@@ -1,112 +1,110 @@
-.fb-sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: $fb-sidebar-bg;
-  border-right: 1px solid $fb-border;
-  padding: 12px;
-  overflow-y: auto;
+.side {
+  background: var(--paper-2);
+  border-right: 1px solid var(--ink);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  min-height: 0;
 
-  &__section-label {
-    font-family: $fb-font-heading;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-
-    &--budget { color: $fb-accent-blue; }
-    &--tracking { color: $fb-text-secondary; }
-  }
-
-  &__type-label {
-    font-family: $fb-font-heading;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: $fb-text-secondary;
-  }
-
-  &__account-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__account-row {
+  &__head {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--ink);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 6px;
-    border-radius: 4px;
+    background: var(--ink);
+    color: var(--paper);
+    text-transform: uppercase;
+    font-size: var(--fz-xs);
+    letter-spacing: 1.2px;
+  }
+
+  &__net {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--ink);
+    background: var(--white);
+
+    .lbl {
+      text-transform: uppercase;
+      font-size: var(--fz-xs);
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .val {
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+
+  &__scroll {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__group {
+    border-bottom: 1px solid var(--ink);
+
+    h4 {
+      margin: 0;
+      padding: 6px 10px;
+      background: var(--ink);
+      color: var(--paper);
+      text-transform: uppercase;
+      font-size: var(--fz-xs);
+      letter-spacing: 1.4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+      cursor: pointer;
+
+      .chev { font-size: 10px; }
+      .total { color: #B8B8B8; font-weight: 700; }
+    }
+  }
+
+  &__acct {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 5px 10px 5px 18px;
+    cursor: pointer;
+    border-bottom: 1px dashed #CCCCCC;
+    align-items: baseline;
+    position: relative;
     text-decoration: none;
-    color: $fb-text-primary;
+    color: var(--ink);
 
-    &:hover {
-      background: #e9ecef;
-      color: $fb-text-primary;
+    &:last-child { border-bottom: 0; }
+    &:hover { background: var(--white); color: var(--ink); }
+
+    &.is-active {
+      background: var(--ink);
+      color: var(--paper);
+
+      &::before {
+        content: "\25BA";
+        position: absolute;
+        left: 6px;
+        top: 5px;
+        font-size: 10px;
+        color: var(--red);
+      }
     }
 
-    &--selected {
-      background: $fb-selected-account;
-
-      .fb-sidebar__account-name { font-weight: 500; }
-      .fb-sidebar__account-balance { font-weight: 600; }
+    .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-  }
 
-  &__account-name {
-    font-family: $fb-font-body;
-    font-size: 12px;
-    font-weight: 400;
-  }
+    .bal {
+      font-variant-numeric: tabular-nums;
 
-  &__account-balance {
-    font-family: $fb-font-heading;
-    font-size: 12px;
-    font-weight: 400;
+      &.neg { color: var(--red); }
+    }
 
-    &--negative { color: $fb-danger-red; }
-    &--positive { color: $fb-text-primary; }
-  }
-
-  &__group-total {
-    font-family: $fb-font-heading;
-    font-size: 11px;
-    color: $fb-text-secondary;
-    text-align: right;
-    padding: 2px 6px;
-
-    &--negative { color: $fb-danger-red; }
-  }
-
-  &__divider {
-    height: 1px;
-    background: $fb-border;
-  }
-
-  &__net-worth {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 6px;
-  }
-
-  &__net-worth-label {
-    font-family: $fb-font-heading;
-    font-size: 12px;
-    font-weight: 600;
-    color: $fb-text-primary;
-  }
-
-  &__net-worth-value {
-    font-family: $fb-font-heading;
-    font-size: 12px;
-    font-weight: 600;
-
-    &--positive { color: $fb-income-green; }
-    &--negative { color: $fb-danger-red; }
+    &.is-active .bal.neg { color: #FF8B8B; }
   }
 }
