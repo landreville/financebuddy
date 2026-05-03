@@ -1,19 +1,19 @@
-<nav class="fb-top-nav">
-  <div class="fb-top-nav__brand">
-    <%= link_to "F-Buddy", root_path, class: "fb-top-nav__brand-name" %>
-    <span class="fb-top-nav__brand-tagline">F as in finance</span>
+<header class="hdr">
+  <div class="hdr__brand">
+    <div class="hdr__mark">F</div>
+    <div>
+      <span class="hdr__name">F-BUDDY</span>
+      <span class="hdr__tag">F as in Finance</span>
+    </div>
   </div>
-
-  <div class="fb-top-nav__nav">
-    <%= link_to "Dashboard", dashboard_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'dashboard'}" %>
-    <%= link_to "Budget", budget_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'budget'}" %>
-    <%= link_to "Accounts", accounts_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'accounts'}" %>
-    <%= link_to "Reports", reports_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'reports'}" %>
-    <%= link_to "Recurring", recurring_transactions_path, class: "fb-top-nav__nav-link #{'fb-top-nav__nav-link--active' if controller_name == 'recurring_transactions'}" %>
+  <nav class="hdr__nav">
+    <%= link_to "Dashboard", dashboard_path, class: "hdr__nav-link #{'is-active' if controller_name == 'dashboard'}" %>
+    <%= link_to "Budget", budget_path, class: "hdr__nav-link #{'is-active' if controller_name == 'budget'}" %>
+    <%= link_to "Accounts", accounts_path, class: "hdr__nav-link #{'is-active' if controller_name == 'accounts'}" %>
+    <%= link_to "Reports", reports_path, class: "hdr__nav-link #{'is-active' if controller_name == 'reports'}" %>
+    <%= link_to "Recurring", recurring_transactions_path, class: "hdr__nav-link #{'is-active' if controller_name == 'recurring_transactions'}" %>
+  </nav>
+  <div class="hdr__right">
+    <span class="hdr__dot"></span> ONLINE
   </div>
-
-  <div class="fb-top-nav__actions">
-    <%= link_to "+ Transaction", "#", class: "fb-top-nav__add-btn" %>
-    <%= link_to "Import", "#", class: "fb-top-nav__import-link" %>
-  </div>
-</nav>
+</header>

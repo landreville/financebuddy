@@ -1,0 +1,114 @@
+.hdr {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  align-items: stretch;
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 1px solid var(--ink);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    border-right: 1px solid #333;
+  }
+
+  &__mark {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    background: var(--red);
+    color: var(--paper);
+    font-weight: 700;
+    letter-spacing: 0;
+    font-size: 14px;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      bottom: -3px;
+      width: 24px;
+      height: 24px;
+      background: var(--blue);
+      z-index: -1;
+    }
+  }
+
+  &__name {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  &__tag {
+    color: #B8B8B8;
+    font-size: var(--fz-xs);
+    margin-left: 4px;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__nav-link {
+    background: transparent;
+    color: var(--paper);
+    border: 0;
+    border-right: 1px solid #2A2A2A;
+    padding: 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: var(--fz-sm);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    &:first-child {
+      border-left: 1px solid #2A2A2A;
+    }
+
+    &:hover {
+      background: #1B1B1B;
+      color: #FFFFFF;
+    }
+
+    &.is-active {
+      background: var(--paper);
+      color: var(--ink);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 2px;
+        background: var(--red);
+      }
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 12px;
+    border-left: 1px solid #333;
+    font-size: var(--fz-xs);
+    color: #B8B8B8;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    background: #39FF14;
+    display: inline-block;
+  }
+}
