@@ -44,6 +44,10 @@ a:hover {
   display: grid;
   grid-template-columns: 280px 1fr;
   min-height: 0;
+
+  > .main:only-child {
+    grid-column: 1 / -1;
+  }
 }
 
 ::-webkit-scrollbar { width: 12px; height: 12px; }

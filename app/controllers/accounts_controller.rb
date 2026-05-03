@@ -16,6 +16,7 @@ class AccountsController < ApplicationController
       .includes(:payee, :transaction_lines)
       .order(date: :desc)
       .limit(100)
+    @categories_by_account = @current_ledger.categories.index_by(&:account_id)
   end
 
   private

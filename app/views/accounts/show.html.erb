@@ -67,7 +67,8 @@
           </td>
           <td class="col-date"><%= txn.date.strftime("%y-%m-%d") %></td>
           <td class="col-payee"><%= txn.payee&.name || txn.entry_type.titleize %></td>
-          <td class="col-cat"><%= txn.category&.name || "—" %></td>
+          <% other_line = txn.transaction_lines.find { |l| l.account_id != @account.id } %>
+          <td class="col-cat"><%= @categories_by_account[other_line&.account_id]&.name || "—" %></td>
           <td class="col-memo"><%= txn.memo %></td>
           <% if line.amount < 0 %>
           <td class="col-out has"><%= fmt_money(line.amount.abs) %></td>
