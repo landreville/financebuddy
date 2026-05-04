@@ -55,3 +55,4 @@
 
 # Playwright 
 /.playwright-mcp
+/screenshots
