@@ -61,7 +61,7 @@
         <% @transactions.each do |txn| %>
         <% line = txn.transaction_lines.find { |l| l.account_id == @account.id } %>
         <% next unless line %>
-        <%= render "row", transaction: txn, line: line, account: @account, categories_by_account: @categories_by_account, payees: @current_ledger.payees, categories: @current_ledger.categories %>
+        <%= render "row", transaction: txn, line: line, account: @account, categories_by_account: @categories_by_account, payees: @payees, categories: @categories %>
         <% end %>
         <% if @transactions.empty? %>
         <tr>

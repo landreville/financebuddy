@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "transaction_#{transaction.id}" do %>
-  <tr data-txn-id="<%= transaction.id %>" class="transaction-row">
+  <tr data-txn-id="<%= transaction.id %>" data-account-id="<%= account.id %>" class="transaction-row">
     <td class="col-status">
       <span class="st <%= transaction.status == 'cleared' ? 'cleared' : (transaction.status == 'reconciled' ? 'recon' : '') %>">
         <%= transaction.status == 'cleared' ? 'C' : (transaction.status == 'reconciled' ? 'R' : '·') %>

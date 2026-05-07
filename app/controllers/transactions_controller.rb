@@ -1,7 +1,14 @@
 class TransactionsController < ApplicationController
   before_action :set_current_ledger
-  before_action :set_transaction_entry, only: [:update]
+  before_action :set_transaction_entry, only: [:edit, :update]
   before_action :verify_editable, only: [:update]
+
+  def edit
+    account_id = params[:account_id] || params[:id]
+    @line = @transaction_entry.transaction_lines.find { |l| l.account_id == account_id.to_i }
+    @payees = @current_ledger.payees.order(:name)
+    @categories = @current_ledger.categories.order(:name)
+  end
 
   def update
     if @transaction_entry.reconciled?

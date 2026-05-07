@@ -28,7 +28,12 @@ export default class extends Controller {
   }
 
   loadEditRow(txnId) {
-    fetch(`/transactions/${txnId}/edit`, {
+    const row = this.element.querySelector(`tr[data-txn-id="${txnId}"]`)
+    const line = row.querySelector("td.col-date")
+    const accountPath = window.location.pathname
+    const accountId = line.dataset.accountId
+    
+    fetch(`/transactions/${txnId}/edit?account_id=${accountId}`, {
       headers: { "Turbo-Frame": "transaction_" + txnId + "_edit" }
     })
       .then(r => r.text())
@@ -37,7 +42,6 @@ export default class extends Controller {
         template.innerHTML = html
         const frame = template.content.firstChild
         if (frame && frame.id === "transaction_" + txnId + "_edit") {
-          row = this.element.querySelector(`tr[data-txn-id="${txnId}"]`)
           if (row) {
             row.insertAdjacentElement("afterend", frame)
             row.style.display = "none"
