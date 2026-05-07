@@ -3,27 +3,24 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["results"]
   static values = {
-    url: String,
-    field: String
+    url: String
   }
 
   connect() {
-    this.element.addEventListener("input", this.handleInput.bind(this))
-    this.element.addEventListener("focus", this.handleFocus.bind(this))
+    this.inputTarget.addEventListener("focus", this.handleFocus.bind(this))
     this.resultsTarget.addEventListener("click", this.handleResultClick.bind(this))
   }
 
   disconnect() {
-    this.element.removeEventListener("input", this.handleInput.bind(this))
-    this.element.removeEventListener("focus", this.handleFocus.bind(this))
+    this.inputTarget.removeEventListener("focus", this.handleFocus.bind(this))
     this.resultsTarget.removeEventListener("click", this.handleResultClick.bind(this))
   }
 
   get inputTarget() {
-    return this.element.querySelector("select, input")
+    return this.element.querySelector("select")
   }
 
-  handleInput(e) {
+  handleFocus(e) {
     const query = e.target.value
     if (query.length < 2) {
       this.resultsTarget.innerHTML = ""
@@ -34,20 +31,13 @@ export default class extends Controller {
       .then(data => this.renderResults(data, query))
   }
 
-  handleFocus(e) {
-    if (this.resultsTarget.innerHTML === "") {
-      this.handleInput(e)
-    }
-  }
-
   handleResultClick(e) {
     const item = e.target.closest("[data-autocomplete-value]")
     if (!item) return
     e.preventDefault()
     e.stopPropagation()
     const value = item.dataset.autocompleteValue
-    const label = item.dataset.autocompleteLabel
-    this.inputTarget.value = label
+    this.inputTarget.value = value
     this.inputTarget.dispatchEvent(new Event("change", { bubbles: true }))
     this.resultsTarget.innerHTML = ""
     this.inputTarget.focus()
@@ -60,10 +50,10 @@ export default class extends Controller {
     }
     let html = ""
     items.slice(0, 5).forEach(item => {
-      html += `<div class="autocomplete-item" data-autocomplete-value="${item.id}" data-autocomplete-label="${item.name.replace(/"/g, "&quot;")}">${this.highlight(item.name, query)}</div>`
+      html += `<div class="autocomplete-item" data-autocomplete-value="${item.id}">${this.highlight(item.name, query)}</div>`
     })
     if (query.length >= 2) {
-      html += `<div class="autocomplete-item autocomplete-item--create" data-autocomplete-value="new_${query}" data-autocomplete-label="Create '${query}'">Create '${query}'</div>`
+      html += `<div class="autocomplete-item autocomplete-item--create" data-autocomplete-value="new_${query}">Create '${query}'</div>`
     }
     this.resultsTarget.innerHTML = html
   }
