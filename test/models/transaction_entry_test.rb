@@ -59,4 +59,50 @@ class TransactionEntryTest < ActiveSupport::TestCase
     )
     assert txn.valid?
   end
+
+  test "transaction lines must sum to zero" do
+    ledger = ledgers(:personal)
+    account = accounts(:personal_checking)
+    txn = TransactionEntry.new(
+      ledger: ledger,
+      date: Date.current,
+      entry_type: "expense",
+      status: "uncleared"
+    )
+    txn.transaction_lines.build(account: account, amount: 1000)
+    txn.transaction_lines.build(account: account, amount: -1000)
+    assert txn.valid?
+  end
+
+  test "transaction lines that do not sum to zero are invalid" do
+    ledger = ledgers(:personal)
+    account = accounts(:personal_checking)
+    txn = TransactionEntry.new(
+      ledger: ledger,
+      date: Date.current,
+      entry_type: "expense",
+      status: "uncleared"
+    )
+    txn.transaction_lines.build(account: account, amount: 1000)
+    txn.transaction_lines.build(account: account, amount: -900)
+    assert_not txn.valid?
+    assert_includes txn.errors[:base], "transaction lines must sum to zero"
+  end
+
+  test "transaction lines must belong to the same ledger as the transaction" do
+    ledger = ledgers(:personal)
+    other_ledger = ledgers(:household)
+    account = accounts(:personal_checking)
+    other_account = accounts_by_ledger(:household)[:checking]
+    txn = TransactionEntry.new(
+      ledger: ledger,
+      date: Date.current,
+      entry_type: "expense",
+      status: "uncleared"
+    )
+    txn.transaction_lines.build(account: account, amount: 1000)
+    txn.transaction_lines.build(account: other_account, amount: -1000)
+    assert_not txn.valid?
+    assert_includes txn.errors[:account], "must belong to the same ledger as the transaction"
+  end
 end

@@ -1,0 +1,78 @@
+.transaction-row--editing {
+  background-color: #fff8e6;
+}
+
+.transaction-row--editing .col-actions {
+  background-color: #fff8e6;
+}
+
+.form-input--inline {
+  display: inline-block;
+  width: auto;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-input--inline:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-fade);
+}
+
+.form-input--currency {
+  text-align: right;
+  width: 100px;
+}
+
+.autocomplete-input {
+  width: 200px;
+}
+
+.autocomplete-results {
+  position: absolute;
+  z-index: 100;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.autocomplete-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item--active {
+  background-color: var(--primary-fade);
+}
+
+.autocomplete-item--create {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.autocomplete-empty {
+  padding: 8px 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.col-actions {
+  position: sticky;
+  right: 0;
+  background: var(--bg);
+  padding: 12px 8px;
+  text-align: right;
+  box-shadow: -2px 0 4px rgba(0,0,0,0.05);
+}
+
+.transaction-row--editing .col-actions {
+  background: #fff8e6;
+}

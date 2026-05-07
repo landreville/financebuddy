@@ -1,0 +1,21 @@
+<%= turbo_frame_tag "transaction_#{transaction.id}" do %>
+  <tr data-txn-id="<%= transaction.id %>" class="transaction-row">
+    <td class="col-status">
+      <span class="st <%= transaction.status == 'cleared' ? 'cleared' : (transaction.status == 'reconciled' ? 'recon' : '') %>">
+        <%= transaction.status == 'cleared' ? 'C' : (transaction.status == 'reconciled' ? 'R' : '·') %>
+      </span>
+    </td>
+    <td class="col-date"><%= transaction.date.strftime("%y-%m-%d") %></td>
+    <td class="col-payee"><%= transaction.payee&.name || transaction.entry_type.titleize %></td>
+    <% other_line = transaction.transaction_lines.find { |l| l.account_id != account.id } %>
+    <td class="col-cat"><%= categories_by_account[other_line&.account_id]&.name || "—" %></td>
+    <td class="col-memo"><%= transaction.memo %></td>
+    <% if line.amount < 0 %>
+    <td class="col-out has"><%= fmt_money(line.amount.abs) %></td>
+    <td class="col-in"></td>
+    <% else %>
+    <td class="col-out"></td>
+    <td class="col-in has"><%= fmt_money(line.amount) %></td>
+    <% end %>
+  </tr>
+<% end %>

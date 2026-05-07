@@ -43,6 +43,7 @@
         <col class="col-memo">
         <col class="col-out">
         <col class="col-in">
+        <col class="col-actions">
       </colgroup>
       <thead>
         <tr>
@@ -53,35 +54,18 @@
           <th class="col-memo">Memo</th>
           <th class="col-out" style="text-align: right">Outflow</th>
           <th class="col-in" style="text-align: right">Inflow</th>
+          <th class="col-actions"></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody data-controller="row-edit">
         <% @transactions.each do |txn| %>
         <% line = txn.transaction_lines.find { |l| l.account_id == @account.id } %>
         <% next unless line %>
-        <tr data-txn-id="<%= txn.id %>">
-          <td class="col-status">
-            <span class="st <%= txn.status == 'cleared' ? 'cleared' : (txn.status == 'reconciled' ? 'recon' : '') %>">
-              <%= txn.status == 'cleared' ? 'C' : (txn.status == 'reconciled' ? 'R' : '·') %>
-            </span>
-          </td>
-          <td class="col-date"><%= txn.date.strftime("%y-%m-%d") %></td>
-          <td class="col-payee"><%= txn.payee&.name || txn.entry_type.titleize %></td>
-          <% other_line = txn.transaction_lines.find { |l| l.account_id != @account.id } %>
-          <td class="col-cat"><%= @categories_by_account[other_line&.account_id]&.name || "—" %></td>
-          <td class="col-memo"><%= txn.memo %></td>
-          <% if line.amount < 0 %>
-          <td class="col-out has"><%= fmt_money(line.amount.abs) %></td>
-          <td class="col-in"></td>
-          <% else %>
-          <td class="col-out"></td>
-          <td class="col-in has"><%= fmt_money(line.amount) %></td>
-          <% end %>
-        </tr>
+        <%= render "row", transaction: txn, line: line, account: @account, categories_by_account: @categories_by_account %>
         <% end %>
         <% if @transactions.empty? %>
         <tr>
-          <td colspan="7" style="padding: 24px; text-align: center; color: var(--muted);">
+          <td colspan="8" style="padding: 24px; text-align: center; color: var(--muted);">
             — NO TRANSACTIONS —
           </td>
         </tr>

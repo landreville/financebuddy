@@ -1,0 +1,41 @@
+<%= turbo_frame_tag "transaction_#{transaction.id}_edit" do %>
+  <tr class="transaction-row transaction-row--editing" data-controller="row-edit-form" data-row-edit-form-transaction-id-value="<%= transaction.id %>">
+    <td class="col-status">
+      <span class="st editing">✎</span>
+    </td>
+    <td class="col-date">
+      <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+        <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    </td>
+    <td class="col-payee">
+      <div data-controller="autocomplete" data-autocomplete-url-value="/payees" data-autocomplete-field-value="payee_id">
+        <%= f.collection_select :payee_id, payees, :id, :name, { prompt: "Select payee" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur", keydown->autocomplete#keydown: '$event' } } %>
+        <div class="autocomplete-results" data-autocomplete-target="results"></div>
+      </div>
+    </td>
+    <td class="col-cat">
+      <div data-controller="autocomplete" data-autocomplete-url-value="/categories" data-autocomplete-field-value="category_id">
+        <%= f.collection_select :category_id, categories, :id, :name, { prompt: "Select category" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur, keydown->autocomplete#keydown: '$event'" } } %>
+        <div class="autocomplete-results" data-autocomplete-target="results"></div>
+      </div>
+    </td>
+    <td class="col-memo">
+      <%= f.text_field :memo, class: "form-input form-input--inline", data: { action: "blur->row-edit-form#blur" } %>
+    </td>
+    <td class="col-out">
+      <% if line.amount < 0 %>
+        <%= f.number_field :amount, value: line.amount.abs, step: 0.01, class: "form-input form-input--inline form-input--currency", data: { action: "blur->row-edit-form#blur" } %>
+      <% end %>
+    </td>
+    <td class="col-in">
+      <% if line.amount >= 0 %>
+        <%= f.number_field :amount, value: line.amount, step: 0.01, class: "form-input form-input--inline form-input--currency", data: { action: "blur->row-edit-form#blur" } %>
+      <% end %>
+    </td>
+    <td class="col-actions">
+      <button type="submit" class="btn btn--sm btn--primary" data-row-edit-form-target="saveBtn">Save</button>
+      <button type="button" class="btn btn--sm" data-action="row-edit-form#cancel">Cancel</button>
+    </td>
+    <% end %>
+  </tr>
+<% end %>
