@@ -5,6 +5,7 @@
     </td>
     <td class="col-date">
       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+        <%= f.hidden_field :account_id, value: account.id %>
         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
     </td>
     <td class="col-payee">

@@ -19,7 +19,7 @@ class TransactionsController < ApplicationController
   def update
     account_id = params[:account_id]
     unless account_id
-      Rails.logger.error "Update failed: account_id is nil for transaction #{@transaction_entry.id}"
+      Rails.logger.error "Update failed: account_id is nil for transaction #{@transaction_entry.id}, params: #{params.inspect}"
       head :bad_request
       return
     end
