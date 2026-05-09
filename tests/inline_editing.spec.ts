@@ -1,12 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
-test('inline editing of transactions', async ({ page }) => {
-  // Login
-  await page.goto('/test/login');
-  await expect(page.getByText('Success')).toBeVisible();
-
-  // Navigate to accounts page
-  await page.goto('/accounts/1');
+test('inline editing of transactions', async ({ authedPage: page }) => {
+  await page.goto('/accounts');
   await expect(page).toHaveURL(/\/accounts\/\d+/);
 
   // Click on a transaction row to enter edit mode
@@ -29,13 +24,9 @@ test('inline editing of transactions', async ({ page }) => {
   await expect(page.locator('.transaction-row--editing')).not.toBeVisible();
 });
 
-test('inline editing blur save', async ({ page }) => {
-  // Login
-  await page.goto('/test/login');
-  await expect(page.getByText('Success')).toBeVisible();
-
-  // Navigate to accounts page
-  await page.goto('/accounts/1');
+test('inline editing blur save', async ({ authedPage: page }) => {
+  await page.goto('/accounts');
+  await expect(page).toHaveURL(/\/accounts\/\d+/);
   
   // Click on a transaction row
   const firstRow = page.locator('tr[data-txn-id]').first();
@@ -51,13 +42,9 @@ test('inline editing blur save', async ({ page }) => {
   await expect(page.locator('.transaction-row--editing')).not.toBeVisible();
 });
 
-test('inline editing cancel', async ({ page }) => {
-  // Login
-  await page.goto('/test/login');
-  await expect(page.getByText('Success')).toBeVisible();
-
-  // Navigate to accounts page
-  await page.goto('/accounts/1');
+test('inline editing cancel', async ({ authedPage: page }) => {
+  await page.goto('/accounts');
+  await expect(page).toHaveURL(/\/accounts\/\d+/);
   
   // Click on a transaction row
   const firstRow = page.locator('tr[data-txn-id]').first();
@@ -73,13 +60,9 @@ test('inline editing cancel', async ({ page }) => {
   await expect(page.locator('.transaction-row--editing')).not.toBeVisible();
 });
 
-test('inline editing with escape key', async ({ page }) => {
-  // Login
-  await page.goto('/test/login');
-  await expect(page.getByText('Success')).toBeVisible();
-
-  // Navigate to accounts page
-  await page.goto('/accounts/1');
+test('inline editing with escape key', async ({ authedPage: page }) => {
+  await page.goto('/accounts');
+  await expect(page).toHaveURL(/\/accounts\/\d+/);
   
   // Click on a transaction row
   const firstRow = page.locator('tr[data-txn-id]').first();
@@ -95,13 +78,9 @@ test('inline editing with escape key', async ({ page }) => {
   await expect(page.locator('.transaction-row--editing')).not.toBeVisible();
 });
 
-test('inline editing with enter key', async ({ page }) => {
-  // Login
-  await page.goto('/test/login');
-  await expect(page.getByText('Success')).toBeVisible();
-
-  // Navigate to accounts page
-  await page.goto('/accounts/1');
+test('inline editing with enter key', async ({ authedPage: page }) => {
+  await page.goto('/accounts');
+  await expect(page).toHaveURL(/\/accounts\/\d+/);
   
   // Click on a transaction row
   const firstRow = page.locator('tr[data-txn-id]').first();

@@ -59,8 +59,10 @@ Ledger.destroy_all
 
 puts "Creating ledger and user..."
 ledger = Ledger.create!(name: "Demo Budget", currency: "CAD")
-user = User.create!(email_address: "demo@example.com", password: "password", password_confirmation: "password")
-LedgerMembership.create!(ledger: ledger, user: user, role: "owner")
+demo_user = User.create!(email_address: "demo@example.com", password: "password", password_confirmation: "password")
+test_user = User.create!(email_address: "test@example.com", password: "password", password_confirmation: "password")
+LedgerMembership.create!(ledger: ledger, user: demo_user, role: "owner")
+LedgerMembership.create!(ledger: ledger, user: test_user, role: "owner")
 
 puts "Creating accounts..."
 _opening_balances = Account.create!(

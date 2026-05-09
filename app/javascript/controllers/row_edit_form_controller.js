@@ -9,11 +9,13 @@ export default class extends Controller {
   connect() {
     this.formTarget.addEventListener("keydown", this.handleKeydown.bind(this))
     this.saveBtnTarget.addEventListener("click", this.handleSave.bind(this))
+    this.formTarget.addEventListener("blur", this.blur.bind(this), true)
   }
 
   disconnect() {
     this.formTarget.removeEventListener("keydown", this.handleKeydown.bind(this))
     this.saveBtnTarget.removeEventListener("click", this.handleSave.bind(this))
+    this.formTarget.removeEventListener("blur", this.blur.bind(this), true)
   }
 
   focusNext(e) {
@@ -26,11 +28,14 @@ export default class extends Controller {
 
   blur(e) {
     if (e.target.dataset.preventBlur === "true") return
-    const inputs = this.formTarget.querySelectorAll(".form-input")
-    const focused = document.activeElement
-    if (!inputs.includes(focused)) {
-      this.handleSave(e)
-    }
+    // Defer so document.activeElement reflects the new focus target
+    setTimeout(() => {
+      const inputs = Array.from(this.formTarget.querySelectorAll(".form-input"))
+      const focused = document.activeElement
+      if (!inputs.includes(focused)) {
+        this.handleSave(e)
+      }
+    }, 0)
   }
 
   handleKeydown(e) {

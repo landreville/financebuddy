@@ -9,13 +9,13 @@
     </td>
     <td class="col-payee">
       <div data-controller="autocomplete" data-autocomplete-url-value="/payees" data-autocomplete-field-value="payee_id">
-        <%= f.collection_select :payee_id, payees, :id, :name, { prompt: "Select payee" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur", keydown->autocomplete#keydown: '$event' } } %>
+        <%= f.collection_select :payee_id, payees, :id, :name, { prompt: "Select payee" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur keydown->autocomplete#keydown" } } %>
         <div class="autocomplete-results" data-autocomplete-target="results"></div>
       </div>
     </td>
     <td class="col-cat">
       <div data-controller="autocomplete" data-autocomplete-url-value="/categories" data-autocomplete-field-value="category_id">
-        <%= f.collection_select :category_id, categories, :id, :name, { prompt: "Select category" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur, keydown->autocomplete#keydown: '$event'" } } %>
+        <%= f.collection_select :category_id, categories, :id, :name, { prompt: "Select category" }, { class: "form-input form-input--inline autocomplete-input", data: { action: "blur->row-edit-form#blur keydown->autocomplete#keydown" } } %>
         <div class="autocomplete-results" data-autocomplete-target="results"></div>
       </div>
     </td>

@@ -8,6 +8,12 @@ class TransactionsController < ApplicationController
     @line = @transaction_entry.transaction_lines.find { |l| l.account_id == account_id.to_i }
     @payees = @current_ledger.payees.order(:name)
     @categories = @current_ledger.categories.order(:name)
+    render partial: "accounts/edit_row", locals: {
+      transaction: @transaction_entry,
+      line: @line,
+      payees: @payees,
+      categories: @categories
+    }
   end
 
   def update

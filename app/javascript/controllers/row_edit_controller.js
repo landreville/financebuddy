@@ -18,7 +18,7 @@ export default class extends Controller {
     if (e.target.closest(".transaction-row--editing")) {
       return
     }
-    const row = e.currentTarget.closest("tr")
+    const row = e.target.closest("tr")
     if (!row) return
     const txnId = row.dataset.txnId
     if (!txnId) return
@@ -29,23 +29,22 @@ export default class extends Controller {
 
   loadEditRow(txnId) {
     const row = this.element.querySelector(`tr[data-txn-id="${txnId}"]`)
-    const line = row.querySelector("td.col-date")
-    const accountPath = window.location.pathname
-    const accountId = line.dataset.accountId
-    
+    if (!row) return
+    const accountId = row.dataset.accountId
+    const tbody = row.parentElement
+
     fetch(`/transactions/${txnId}/edit?account_id=${accountId}`, {
-      headers: { "Turbo-Frame": "transaction_" + txnId + "_edit" }
+      headers: { "Accept": "text/html" }
     })
       .then(r => r.text())
       .then(html => {
-        const template = document.createElement("template")
-        template.innerHTML = html
-        const frame = template.content.firstChild
-        if (frame && frame.id === "transaction_" + txnId + "_edit") {
-          if (row) {
-            row.insertAdjacentElement("afterend", frame)
-            row.style.display = "none"
-          }
+        const range = document.createRange()
+        range.selectNodeContents(tbody)
+        const fragment = range.createContextualFragment(html)
+        const newRow = fragment.querySelector("tr.transaction-row--editing")
+        if (newRow) {
+          row.insertAdjacentElement("afterend", newRow)
+          row.style.display = "none"
         }
       })
   }
