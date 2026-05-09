@@ -1,0 +1,489 @@
+=> Booting Puma
+=> Rails 8.0.4 application starting in development 
+=> Run `bin/rails server --help` for more startup options
+Puma starting in single mode...
+* Puma version: 7.2.0 ("On The Corner")
+* Ruby version: ruby 3.4.4 (2025-05-14 revision a38531fd3f) +YJIT +PRISM [x86_64-linux]
+*  Min threads: 3
+*  Max threads: 3
+*  Environment: development
+*          PID: 578866
+* Listening on http://127.0.0.1:3000
+* Listening on http://[::1]:3000
+Use Ctrl-C to stop
+Started GET "/" for 127.0.0.1 at 2026-05-09 16:07:47 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Financebuddy'*/[0m
+Processing by HomeController#index as HTML
+  [1m[36mSession Load (0.7ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='index',application='Financebuddy',controller='home'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  Rendering layout layouts/application.html.erb
+  Rendering home/index.html.erb within layouts/application
+  Rendered home/index.html.erb within layouts/application (Duration: 2.8ms | GC: 0.0ms)
+  Rendered shared/_top_nav.html.erb (Duration: 4.2ms | GC: 0.0ms)
+  Rendered shared/_status_bar.html.erb (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 44.5ms | GC: 0.0ms)
+Completed 200 OK in 218ms (Views: 53.0ms | ActiveRecord: 14.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/accounts" for 127.0.0.1 at 2026-05-09 16:07:49 -0400
+Processing by AccountsController#index as HTML
+  [1m[36mSession Load (0.9ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='index',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='index',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (2.1ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='index',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mAccount Load (1.2ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."ledger_id" = 2 AND "accounts"."account_type" IN ('cash', 'credit', 'loan', 'investment') AND "accounts"."archived" = FALSE ORDER BY "accounts"."display_order" ASC, "accounts"."name" ASC LIMIT 1 /*action='index',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/accounts_controller.rb:6:in 'AccountsController#index'
+Redirected to http://localhost:3000/accounts/33
+Completed 302 Found in 300ms (ActiveRecord: 13.9ms (4 queries, 0 cached) | GC: 28.7ms)
+
+
+Started GET "/accounts/33" for 127.0.0.1 at 2026-05-09 16:07:49 -0400
+Processing by AccountsController#show as HTML
+  Parameters: {"id" => "33"}
+  [1m[36mSession Load (0.4ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mAccount Load (0.5ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."ledger_id" = 2 AND "accounts"."id" = 33 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/accounts_controller.rb:11:in 'AccountsController#show'
+  [1m[36mCategory Load (0.8ms)[0m  [1m[34mSELECT "categories".* FROM "categories" WHERE "categories"."ledger_id" = 2 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/accounts_controller.rb:19:in 'AccountsController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering accounts/show.html.erb within layouts/application
+  [1m[36mAccount Load (0.7ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."ledger_id" = 2 AND "accounts"."account_type" IN ('cash', 'credit', 'loan', 'investment') AND "accounts"."archived" = FALSE ORDER BY "accounts"."display_order" ASC, "accounts"."name" ASC /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/shared/_sidebar.html.erb:8
+  Rendered shared/_sidebar.html.erb (Duration: 45.7ms | GC: 0.3ms)
+  [1m[35mSQL (2.5ms)[0m  [1m[34mSELECT DISTINCT "transactions"."date" AS alias_0, "transactions"."id" FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 ORDER BY "transactions"."date" DESC LIMIT 100 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:31
+  [1m[36mTransactionEntry Count (0.9ms)[0m  [1m[34mSELECT COUNT(DISTINCT "transactions"."id") FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 AND "transactions"."id" IN (5948, 5947, 5946, 5962, 5960, 5961, 5950, 5949, 5945, 5897, 5896, 5895, 5911, 5909, 5910, 5899, 5898, 5894, 5845, 5844, 5843, 5859, 5857, 5858, 5847, 5846, 5842, 5789, 5788, 5787, 5803, 5801, 5802, 5791, 5790, 5786, 5731, 5730, 5732, 5729, 5746, 5744, 5745, 5734, 5733, 5728, 5677, 5676, 5675, 5691, 5689, 5690, 5679, 5678, 5674, 5625, 5624, 5623, 5639, 5637, 5638, 5627, 5626, 5622, 5569, 5568, 5567, 5583, 5581, 5582, 5571, 5570, 5566, 5516, 5515, 5514, 5530, 5528, 5529, 5518, 5517, 5513, 5458, 5457, 5456, 5472, 5470, 5471, 5460, 5459, 5455, 5403, 5402, 5401, 5417, 5415, 5416, 5405, 5404, 5400) /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:31
+  [1m[35mCACHE SQL (0.6ms)[0m  [1m[34mSELECT DISTINCT "transactions"."date" AS alias_0, "transactions"."id" FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 ORDER BY "transactions"."date" DESC LIMIT 100[0m
+  ↳ app/views/accounts/show.html.erb:61
+  [1m[35mSQL (2.6ms)[0m  [1m[34mSELECT DISTINCT "transactions"."id" AS t0_r0, "transactions"."ledger_id" AS t0_r1, "transactions"."date" AS t0_r2, "transactions"."payee_id" AS t0_r3, "transactions"."memo" AS t0_r4, "transactions"."status" AS t0_r5, "transactions"."entry_type" AS t0_r6, "transactions"."approved" AS t0_r7, "transactions"."recurring_transaction_id" AS t0_r8, "transactions"."bank_fitid" AS t0_r9, "transactions"."bank_posted_date" AS t0_r10, "transactions"."created_at" AS t0_r11, "transactions"."updated_at" AS t0_r12, "payees"."id" AS t1_r0, "payees"."ledger_id" AS t1_r1, "payees"."name" AS t1_r2, "payees"."created_at" AS t1_r3, "payees"."updated_at" AS t1_r4, "transaction_lines"."id" AS t2_r0, "transaction_lines"."transaction_entry_id" AS t2_r1, "transaction_lines"."account_id" AS t2_r2, "transaction_lines"."amount" AS t2_r3, "transaction_lines"."memo" AS t2_r4, "transaction_lines"."created_at" AS t2_r5, "transaction_lines"."updated_at" AS t2_r6 FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 AND "transactions"."id" IN (5948, 5947, 5946, 5962, 5960, 5961, 5950, 5949, 5945, 5897, 5896, 5895, 5911, 5909, 5910, 5899, 5898, 5894, 5845, 5844, 5843, 5859, 5857, 5858, 5847, 5846, 5842, 5789, 5788, 5787, 5803, 5801, 5802, 5791, 5790, 5786, 5731, 5730, 5732, 5729, 5746, 5744, 5745, 5734, 5733, 5728, 5677, 5676, 5675, 5691, 5689, 5690, 5679, 5678, 5674, 5625, 5624, 5623, 5639, 5637, 5638, 5627, 5626, 5622, 5569, 5568, 5567, 5583, 5581, 5582, 5571, 5570, 5566, 5516, 5515, 5514, 5530, 5528, 5529, 5518, 5517, 5513, 5458, 5457, 5456, 5472, 5470, 5471, 5460, 5459, 5455, 5403, 5402, 5401, 5417, 5415, 5416, 5405, 5404, 5400) ORDER BY "transactions"."date" DESC /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:61
+  Rendered accounts/_row.html.erb (Duration: 16.8ms | GC: 1.1ms)
+  Rendered accounts/_row.html.erb (Duration: 3.3ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.8ms | GC: 1.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.8ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.8ms | GC: 1.4ms)
+  Rendered accounts/_row.html.erb (Duration: 2.1ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 1.9ms | GC: 1.6ms)
+  Rendered accounts/_row.html.erb (Duration: 2.0ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 5.8ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.2ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.8ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.5ms | GC: 0.9ms)
+  Rendered accounts/_row.html.erb (Duration: 1.4ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 2.4ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 2.4ms | GC: 1.9ms)
+  Rendered accounts/_row.html.erb (Duration: 1.6ms | GC: 0.9ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 3.2ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 11.4ms | GC: 1.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.4ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.8ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.4ms | GC: 1.1ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.8ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.8ms | GC: 1.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.4ms | GC: 1.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.6ms | GC: 1.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.5ms | GC: 1.3ms)
+  Rendered accounts/_row.html.erb (Duration: 1.1ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.6ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.5ms | GC: 1.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 1.2ms | GC: 1.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 1.3ms | GC: 1.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 2.6ms | GC: 2.1ms)
+  Rendered accounts/_row.html.erb (Duration: 2.5ms | GC: 2.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.8ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/show.html.erb within layouts/application (Duration: 327.5ms | GC: 62.3ms)
+  Rendered shared/_top_nav.html.erb (Duration: 3.6ms | GC: 0.0ms)
+  Rendered shared/_status_bar.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 339.5ms | GC: 62.3ms)
+Completed 200 OK in 564ms (Views: 331.8ms | ActiveRecord: 23.8ms (10 queries, 1 cached) | GC: 67.2ms)
+
+
+Started GET "/transactions/5962/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:51 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5962"}
+  [1m[36mSession Load (0.5ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.4ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.5ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5962 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.3ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 72 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.4ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5962 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.4ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (40, 33) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 7.8ms | GC: 0.7ms)
+Completed 500 Internal Server Error in 144ms (ActiveRecord: 2.9ms (7 queries, 0 cached) | GC: 1.1ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/transactions/5962/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:52 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5962"}
+  [1m[36mSession Load (0.5ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.4ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5962 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.3ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 72 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.4ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5962 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.3ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (40, 33) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 1.9ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 68ms (ActiveRecord: 2.8ms (7 queries, 0 cached) | GC: 1.0ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/transactions/5946/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:53 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5946"}
+  [1m[36mSession Load (0.4ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.4ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5946 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.3ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 94 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.4ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5946 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.5ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (33, 32) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 3.3ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 64ms (ActiveRecord: 3.0ms (7 queries, 0 cached) | GC: 2.8ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/transactions/5946/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:54 -0400
+Started GET "/transactions/5946/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:54 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5946"}
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5946"}
+  [1m[36mSession Load (0.7ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.8ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (1.1ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5946 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.6ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 94 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.5ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5946 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.6ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (33, 32) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 2.3ms | GC: 1.1ms)
+Completed 500 Internal Server Error in 107ms (ActiveRecord: 4.8ms (7 queries, 0 cached) | GC: 4.4ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+  [1m[36mSession Load (4.9ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (1.0ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (1.5ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5946 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.8ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 94 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (1.5ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5946 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (1.7ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (33, 32) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 0.7ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 834ms (ActiveRecord: 12.3ms (7 queries, 0 cached) | GC: 187.0ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/transactions/5946/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:07:56 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5946"}
+  [1m[36mSession Load (0.5ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.6ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.5ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5946 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.4ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 94 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.3ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5946 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.4ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (33, 32) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 0.7ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 48ms (ActiveRecord: 3.1ms (7 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/transactions/5946/edit?account_id=33" for 127.0.0.1 at 2026-05-09 16:08:08 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5946"}
+  [1m[36mSession Load (1.1ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.4ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5946 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.4ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."id" = 94 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.3ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5946 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.4ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (33, 32) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:73:in 'TransactionsController#set_transaction_entry'
+  Rendered accounts/_edit_row.html.erb (Duration: 1.0ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 47ms (ActiveRecord: 3.4ms (7 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+Caused by: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>)
+
+Information for: ActionView::Template::Error (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+     5:     </td>
+     6:     <td class="col-date">
+     7:       <%= form_with model: transaction, url: transaction_path(transaction.id), html: { data: { row_edit_form_target: "form" } } do |f| %>
+     8:         <%= f.hidden_field :account_id, value: account.id %>
+     9:         <%= f.date_field :date, class: "form-input form-input--inline", data: { action: "focus->row-edit-form#focusNext" } %>
+    10:     </td>
+    11:     <td class="col-payee">
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+
+Information for cause: NameError (undefined local variable or method 'account' for an instance of #<Class:0x00007d1064fba1e8>):
+  
+app/views/accounts/_edit_row.html.erb:8
+app/views/accounts/_edit_row.html.erb:7
+app/views/accounts/_edit_row.html.erb:1
+app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'

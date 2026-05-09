@@ -11,6 +11,7 @@ class TransactionsController < ApplicationController
     render partial: "accounts/edit_row", locals: {
       transaction: @transaction_entry,
       line: @line,
+      account: @line.account,
       payees: @payees,
       categories: @categories
     }
