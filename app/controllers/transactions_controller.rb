@@ -17,32 +17,38 @@ class TransactionsController < ApplicationController
   end
 
   def update
-    if @transaction_entry.reconciled?
-      render turbo_stream: turbo_stream.replace(
-        "transaction_#{@transaction_entry.id}",
-        partial: "accounts/row",
-        locals: {transaction: @transaction_entry}
-      )
-      return
-    end
+    account_id = params[:account_id]
+    @line = @transaction_entry.transaction_lines.find { |l| l.account_id == account_id.to_i }
+    @categories_by_account = @current_ledger.categories.index_by(&:account_id)
 
     updater = TransactionUpdater.new(
       transaction_entry: @transaction_entry,
       attributes: permitted_attributes,
-      current_user: current_user
+      current_user: Current.user
     )
 
     if updater.update
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}",
         partial: "accounts/row",
-        locals: {transaction: updater.transaction_entry}
+        locals: {
+          transaction: updater.transaction_entry,
+          account: @line.account,
+          line: @line,
+          categories_by_account: @categories_by_account
+        }
       )
     else
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}_edit",
         partial: "accounts/edit_row",
-        locals: {transaction: @transaction_entry, errors: updater.errors}
+        locals: {
+          transaction: @transaction_entry,
+          line: @line,
+          payees: @current_ledger.payees.order(:name),
+          categories: @current_ledger.categories.order(:name),
+          errors: updater.errors
+        }
       ), status: :unprocessable_entity
     end
   end
@@ -50,7 +56,9 @@ class TransactionsController < ApplicationController
   private
 
   def set_transaction_entry
-    @transaction_entry = @current_ledger.transaction_entries.find(params[:id])
+    @transaction_entry = @current_ledger.transaction_entries
+      .includes(:payee, :transaction_lines => :account)
+      .find(params[:id])
   end
 
   def verify_editable

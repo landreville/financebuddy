@@ -17,6 +17,18 @@ class TransactionEntry < ApplicationRecord
   validate :lines_sum_to_zero
   validate :lines_ledger_consistency
 
+  def reconciled?
+    status == "reconciled"
+  end
+
+  def cleared?
+    status == "cleared"
+  end
+
+  def uncleared?
+    status == "uncleared"
+  end
+
   private
 
   def lines_sum_to_zero

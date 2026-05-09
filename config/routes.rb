@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "dashboard" => "dashboard#index", :as => :dashboard
   get "budget" => "budget#index", :as => :budget
   resources :accounts, only: [:index, :show]
-  resources :transactions, only: [:update], param: :id
+  resources :transactions, only: [:update, :edit], param: :id
   resources :payees, only: [:index]
   resources :categories, only: [:index]
   get "reports" => "reports#index", :as => :reports

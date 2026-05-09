@@ -4,11 +4,12 @@ export default class extends Controller {
   static targets = ["form"]
 
   connect() {
-    this.element.addEventListener("click", this.handleClick.bind(this))
+    this.boundHandleClick = this.handleClick.bind(this)
+    this.element.addEventListener("click", this.boundHandleClick)
   }
 
   disconnect() {
-    this.element.removeEventListener("click", this.handleClick.bind(this))
+    this.element.removeEventListener("click", this.boundHandleClick)
   }
 
   handleClick(e) {
