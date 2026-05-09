@@ -140,6 +140,20 @@ test "update action renders turbo_stream on success" do
     assert_match /transaction_#{@txn.id}"/, response.body
   end
 
+  test "update action responds with turbo-stream content type so Turbo processes it instead of rendering as text" do
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+    follow_redirect!
+
+    put transaction_path(@txn),
+        params: {
+          transaction_entry: { account_id: @account.id, date: "2026-03-16" }
+        },
+        headers: { "Accept" => "text/vnd.turbo-stream.html, text/html, application/xhtml+xml" }
+
+    assert_response :success
+    assert_includes response.content_type, "text/vnd.turbo-stream.html"
+  end
+
 test "update action renders turbo_stream with errors on failure" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
     follow_redirect!

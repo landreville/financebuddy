@@ -51,7 +51,7 @@ export default class extends Controller {
   handleSave(e) {
     e.preventDefault()
     if (this.formTarget.reportValidity()) {
-      this.formTarget.submit()
+      this.formTarget.requestSubmit()
     }
   }
 
