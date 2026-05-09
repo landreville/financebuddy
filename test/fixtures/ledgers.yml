@@ -5,3 +5,7 @@ personal:
 business:
   name: Business Budget
   currency: CAD
+
+demo:
+  name: Demo Budget
+  currency: CAD

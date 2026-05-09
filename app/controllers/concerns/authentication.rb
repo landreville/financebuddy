@@ -27,7 +27,7 @@ module Authentication
   end
 
   def find_session_by_cookie
-    Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+    Session.find_by(id: cookies.signed[:financebuddy_session_id]) if cookies.signed[:financebuddy_session_id]
   end
 
   def request_authentication
@@ -42,12 +42,12 @@ module Authentication
   def start_new_session_for(user)
     user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
       Current.session = session
-      cookies.signed.permanent[:session_id] = {value: session.id, httponly: true, same_site: :lax}
+      cookies.signed.permanent[:financebuddy_session_id] = {value: session.id, httponly: true, same_site: :lax}
     end
   end
 
   def terminate_session
     Current.session.destroy
-    cookies.delete(:session_id)
+    cookies.delete(:financebuddy_session_id)
   end
 end
