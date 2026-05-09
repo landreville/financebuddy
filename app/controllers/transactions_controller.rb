@@ -15,7 +15,7 @@ class TransactionsController < ApplicationController
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}",
         partial: "accounts/row",
-        locals: { transaction: @transaction_entry }
+        locals: {transaction: @transaction_entry}
       )
       return
     end
@@ -30,13 +30,13 @@ class TransactionsController < ApplicationController
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}",
         partial: "accounts/row",
-        locals: { transaction: updater.transaction_entry }
+        locals: {transaction: updater.transaction_entry}
       )
     else
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}_edit",
         partial: "accounts/edit_row",
-        locals: { transaction: @transaction_entry, errors: updater.errors }
+        locals: {transaction: @transaction_entry, errors: updater.errors}
       ), status: :unprocessable_entity
     end
   end

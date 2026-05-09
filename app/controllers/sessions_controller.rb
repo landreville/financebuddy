@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
   def test_login
     user = User.find_by!(email_address: "test@example.com")
     start_new_session_for user
-    render json: { success: true, user: { id: user.id, email: user.email_address } }
+    render json: {success: true, user: {id: user.id, email: user.email_address}}
   end
 
   def destroy

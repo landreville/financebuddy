@@ -27,7 +27,7 @@ class TransactionUpdater
   private
 
   def locked?
-    @transaction_entry.reconciled?
+    @transaction_entry.status == "reconciled"
   end
 
   def update_transaction_lines
@@ -54,6 +54,7 @@ class TransactionUpdater
     end
 
     validate_double_entry
+    raise ActiveRecord::RecordInvalid.new(@transaction_entry) if errors.any?
     @transaction_entry.save!
   end
 
@@ -71,14 +72,14 @@ class TransactionUpdater
     debits = lines.select { |l| l.amount > 0 }
     credits = lines.select { |l| l.amount < 0 }
 
-    if debits.empty? || credits.empty?
-      @transaction_entry.entry_type = "transfer"
+    @transaction_entry.entry_type = if debits.empty? || credits.empty?
+      "transfer"
     elsif debits.all? { |l| l.account.account_type == "expense" } && credits.all? { |l| l.account.account_type == "revenue" }
-      @transaction_entry.entry_type = "expense"
+      "expense"
     elsif debits.all? { |l| l.account.account_type == "revenue" } && credits.all? { |l| l.account.account_type == "expense" }
-      @transaction_entry.entry_type = "income"
+      "income"
     else
-      @transaction_entry.entry_type = "transfer"
+      "transfer"
     end
   end
 end

@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
 
   def index
     query = params[:q] || ""
-    categories = @current_ledger.categories.where("name ilike ?", "%#{query}%").order(:name).limit(10).map { |c| { id: c.id, name: c.name } }
+    categories = @current_ledger.categories.where("name ilike ?", "%#{query}%").order(:name).limit(10).map { |c| {id: c.id, name: c.name} }
     render json: categories
   end
 end

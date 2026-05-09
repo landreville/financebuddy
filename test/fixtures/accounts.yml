@@ -97,3 +97,73 @@ visa_payment_expense:
   cleared_balance: 0
   display_order: 0
   archived: false
+
+personal_checking:
+  ledger: personal
+  name: Personal Checking
+  account_type: cash
+  on_budget: true
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+personal_savings:
+  ledger: personal
+  name: Personal Savings
+  account_type: cash
+  on_budget: true
+  balance: 0
+  cleared_balance: 0
+  display_order: 1
+  archived: false
+
+chequing:
+  ledger: personal
+  name: Chequing
+  account_type: cash
+  on_budget: true
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+savings:
+  ledger: personal
+  name: Savings
+  account_type: cash
+  on_budget: true
+  balance: 0
+  cleared_balance: 0
+  display_order: 1
+  archived: false
+
+groceries_expense:
+  ledger: personal
+  name: Groceries Expense
+  account_type: expense
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+income_account:
+  ledger: personal
+  name: Income Account
+  account_type: revenue
+  on_budget: false
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false
+
+business_chequing:
+  ledger: business
+  name: Business Chequing
+  account_type: cash
+  on_budget: true
+  balance: 0
+  cleared_balance: 0
+  display_order: 0
+  archived: false

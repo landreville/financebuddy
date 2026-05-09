@@ -62,7 +62,7 @@ class TransactionEntryTest < ActiveSupport::TestCase
 
   test "transaction lines must sum to zero" do
     ledger = ledgers(:personal)
-    account = accounts(:personal_checking)
+    account = accounts(:chequing)
     txn = TransactionEntry.new(
       ledger: ledger,
       date: Date.current,
@@ -76,7 +76,7 @@ class TransactionEntryTest < ActiveSupport::TestCase
 
   test "transaction lines that do not sum to zero are invalid" do
     ledger = ledgers(:personal)
-    account = accounts(:personal_checking)
+    account = accounts(:chequing)
     txn = TransactionEntry.new(
       ledger: ledger,
       date: Date.current,
@@ -90,10 +90,15 @@ class TransactionEntryTest < ActiveSupport::TestCase
   end
 
   test "transaction lines must belong to the same ledger as the transaction" do
-    ledger = ledgers(:personal)
-    other_ledger = ledgers(:household)
-    account = accounts(:personal_checking)
-    other_account = accounts_by_ledger(:household)[:checking]
+    ledger = Ledger.find_by(name: "Demo Budget")
+    account = Account.find_by(name: "Northbrook Chequing")
+    other_account = Account.create!(
+      ledger: Ledger.create!(name: "Other Budget", currency: "USD"),
+      name: "Other Account",
+      account_type: "cash",
+      on_budget: true,
+      display_order: 0
+    )
     txn = TransactionEntry.new(
       ledger: ledger,
       date: Date.current,

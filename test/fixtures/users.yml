@@ -3,3 +3,7 @@
 jason:
   email_address: jason@example.com
   password_digest: <%= password_digest %>
+
+one:
+  email_address: one@example.com
+  password_digest: <%= password_digest %>
