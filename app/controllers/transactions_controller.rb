@@ -8,6 +8,12 @@ class TransactionsController < ApplicationController
     @line = @transaction_entry.transaction_lines.find { |l| l.account_id == account_id.to_i }
     @payees = @current_ledger.payees.order(:name)
     @categories = @current_ledger.categories.order(:name)
+
+    unless @line && @line.account
+      head :not_found
+      return
+    end
+
     render partial: "accounts/edit_row", locals: {
       transaction: @transaction_entry,
       line: @line,
@@ -17,8 +23,8 @@ class TransactionsController < ApplicationController
     }
   end
 
-  def update
-    account_id = params[:account_id]
+def update
+    account_id = params.dig(:transaction_entry, :account_id)
     unless account_id
       Rails.logger.error "Update failed: account_id is nil for transaction #{@transaction_entry.id}, params: #{params.inspect}"
       head :bad_request
@@ -58,6 +64,7 @@ class TransactionsController < ApplicationController
         locals: {
           transaction: @transaction_entry,
           line: @line,
+          account: @line.account,
           payees: @current_ledger.payees.order(:name),
           categories: @current_ledger.categories.order(:name),
           errors: updater.errors
@@ -70,7 +77,7 @@ class TransactionsController < ApplicationController
 
   def set_transaction_entry
     @transaction_entry = @current_ledger.transaction_entries
-      .includes(:payee, :transaction_lines => :account)
+      .includes(:payee, transaction_lines: :account)
       .find(params[:id])
   end
 

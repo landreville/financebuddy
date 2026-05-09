@@ -487,3 +487,199 @@ app/views/accounts/_edit_row.html.erb:8
 app/views/accounts/_edit_row.html.erb:7
 app/views/accounts/_edit_row.html.erb:1
 app/controllers/transactions_controller.rb:11:in 'TransactionsController#edit'
+Started GET "/accounts/33" for 127.0.0.1 at 2026-05-09 17:32:31 -0400
+Processing by AccountsController#show as HTML
+  Parameters: {"id" => "33"}
+  [1m[36mSession Load (1.0ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (1.7ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mAccount Load (1.1ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."ledger_id" = 2 AND "accounts"."id" = 33 LIMIT 1 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/accounts_controller.rb:11:in 'AccountsController#show'
+  [1m[36mCategory Load (1.0ms)[0m  [1m[34mSELECT "categories".* FROM "categories" WHERE "categories"."ledger_id" = 2 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/controllers/accounts_controller.rb:19:in 'AccountsController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering accounts/show.html.erb within layouts/application
+  [1m[36mAccount Load (1.4ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."ledger_id" = 2 AND "accounts"."account_type" IN ('cash', 'credit', 'loan', 'investment') AND "accounts"."archived" = FALSE ORDER BY "accounts"."display_order" ASC, "accounts"."name" ASC /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/shared/_sidebar.html.erb:8
+  Rendered shared/_sidebar.html.erb (Duration: 29.6ms | GC: 5.2ms)
+  [1m[35mSQL (4.1ms)[0m  [1m[34mSELECT DISTINCT "transactions"."date" AS alias_0, "transactions"."id" FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 ORDER BY "transactions"."date" DESC LIMIT 100 /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:31
+  [1m[36mTransactionEntry Count (2.1ms)[0m  [1m[34mSELECT COUNT(DISTINCT "transactions"."id") FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 AND "transactions"."id" IN (5948, 5947, 5946, 5962, 5960, 5961, 5950, 5949, 5945, 5897, 5896, 5895, 5911, 5909, 5910, 5899, 5898, 5894, 5845, 5844, 5843, 5859, 5857, 5858, 5847, 5846, 5842, 5789, 5788, 5787, 5803, 5801, 5802, 5791, 5790, 5786, 5731, 5730, 5732, 5729, 5746, 5744, 5745, 5734, 5733, 5728, 5677, 5676, 5675, 5691, 5689, 5690, 5679, 5678, 5674, 5625, 5624, 5623, 5639, 5637, 5638, 5627, 5626, 5622, 5569, 5568, 5567, 5583, 5581, 5582, 5571, 5570, 5566, 5516, 5515, 5514, 5530, 5528, 5529, 5518, 5517, 5513, 5458, 5457, 5456, 5472, 5470, 5471, 5460, 5459, 5455, 5403, 5402, 5401, 5417, 5415, 5416, 5405, 5404, 5400) /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:31
+  [1m[35mCACHE SQL (0.2ms)[0m  [1m[34mSELECT DISTINCT "transactions"."date" AS alias_0, "transactions"."id" FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 ORDER BY "transactions"."date" DESC LIMIT 100[0m
+  ↳ app/views/accounts/show.html.erb:61
+  [1m[35mSQL (3.4ms)[0m  [1m[34mSELECT DISTINCT "transactions"."id" AS t0_r0, "transactions"."ledger_id" AS t0_r1, "transactions"."date" AS t0_r2, "transactions"."payee_id" AS t0_r3, "transactions"."memo" AS t0_r4, "transactions"."status" AS t0_r5, "transactions"."entry_type" AS t0_r6, "transactions"."approved" AS t0_r7, "transactions"."recurring_transaction_id" AS t0_r8, "transactions"."bank_fitid" AS t0_r9, "transactions"."bank_posted_date" AS t0_r10, "transactions"."created_at" AS t0_r11, "transactions"."updated_at" AS t0_r12, "payees"."id" AS t1_r0, "payees"."ledger_id" AS t1_r1, "payees"."name" AS t1_r2, "payees"."created_at" AS t1_r3, "payees"."updated_at" AS t1_r4, "transaction_lines"."id" AS t2_r0, "transaction_lines"."transaction_entry_id" AS t2_r1, "transaction_lines"."account_id" AS t2_r2, "transaction_lines"."amount" AS t2_r3, "transaction_lines"."memo" AS t2_r4, "transaction_lines"."created_at" AS t2_r5, "transaction_lines"."updated_at" AS t2_r6 FROM "transactions" INNER JOIN "transaction_lines" ON "transaction_lines"."transaction_entry_id" = "transactions"."id" LEFT OUTER JOIN "payees" ON "payees"."id" = "transactions"."payee_id" WHERE "transactions"."ledger_id" = 2 AND "transaction_lines"."account_id" = 33 AND "transactions"."id" IN (5948, 5947, 5946, 5962, 5960, 5961, 5950, 5949, 5945, 5897, 5896, 5895, 5911, 5909, 5910, 5899, 5898, 5894, 5845, 5844, 5843, 5859, 5857, 5858, 5847, 5846, 5842, 5789, 5788, 5787, 5803, 5801, 5802, 5791, 5790, 5786, 5731, 5730, 5732, 5729, 5746, 5744, 5745, 5734, 5733, 5728, 5677, 5676, 5675, 5691, 5689, 5690, 5679, 5678, 5674, 5625, 5624, 5623, 5639, 5637, 5638, 5627, 5626, 5622, 5569, 5568, 5567, 5583, 5581, 5582, 5571, 5570, 5566, 5516, 5515, 5514, 5530, 5528, 5529, 5518, 5517, 5513, 5458, 5457, 5456, 5472, 5470, 5471, 5460, 5459, 5455, 5403, 5402, 5401, 5417, 5415, 5416, 5405, 5404, 5400) ORDER BY "transactions"."date" DESC /*action='show',application='Financebuddy',controller='accounts'*/[0m
+  ↳ app/views/accounts/show.html.erb:61
+  Rendered accounts/_row.html.erb (Duration: 2.9ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.4ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 2.5ms | GC: 2.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.2ms | GC: 1.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 2.1ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.7ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.7ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.0ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.5ms | GC: 1.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.1ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 8.0ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.7ms | GC: 0.4ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.7ms | GC: 1.4ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.6ms | GC: 1.2ms)
+  Rendered accounts/_row.html.erb (Duration: 1.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.9ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.6ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.7ms | GC: 0.5ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.5ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.6ms | GC: 0.3ms)
+  Rendered accounts/_row.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.4ms | GC: 0.2ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 2.9ms | GC: 2.6ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 1.1ms | GC: 0.8ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/_row.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered accounts/show.html.erb within layouts/application (Duration: 244.6ms | GC: 79.3ms)
+  Rendered shared/_top_nav.html.erb (Duration: 1.6ms | GC: 0.0ms)
+  Rendered shared/_status_bar.html.erb (Duration: 1.6ms | GC: 1.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 262.7ms | GC: 81.4ms)
+Completed 200 OK in 617ms (Views: 257.4ms | ActiveRecord: 24.4ms (10 queries, 1 cached) | GC: 103.9ms)
+
+
+Started GET "/reports" for 127.0.0.1 at 2026-05-09 17:32:32 -0400
+Processing by ReportsController#index as HTML
+  [1m[36mSession Load (0.5ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='index',application='Financebuddy',controller='reports'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='index',application='Financebuddy',controller='reports'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.6ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='index',application='Financebuddy',controller='reports'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mCategory Pluck (1.7ms)[0m  [1m[34mSELECT "categories"."account_id" FROM "categories" INNER JOIN "category_groups" ON "category_groups"."id" = "categories"."category_group_id" WHERE "categories"."ledger_id" = 2 AND "category_groups"."system_managed" = FALSE /*action='index',application='Financebuddy',controller='reports'*/[0m
+  ↳ app/controllers/reports_controller.rb:8:in 'ReportsController#index'
+  [1m[36mTransactionLine Sum (2.3ms)[0m  [1m[34mSELECT SUM("transaction_lines"."amount") AS "sum_transaction_lines_amount", "category_groups"."name" AS "category_groups_name", "categories"."name" AS "categories_name" FROM "transaction_lines" INNER JOIN "transactions" ON "transactions"."id" = "transaction_lines"."transaction_entry_id" INNER JOIN categories ON categories.account_id = transaction_lines.account_id INNER JOIN category_groups ON category_groups.id = categories.category_group_id WHERE "transactions"."ledger_id" = 2 AND "transactions"."date" BETWEEN '2026-05-01' AND '2026-05-31' AND "transaction_lines"."account_id" IN (39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60) AND (transaction_lines.amount > 0) GROUP BY "category_groups"."name", "categories"."name" /*action='index',application='Financebuddy',controller='reports'*/[0m
+  ↳ app/controllers/reports_controller.rb:19:in 'ReportsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering reports/index.html.erb within layouts/application
+  Rendered reports/index.html.erb within layouts/application (Duration: 25.9ms | GC: 0.0ms)
+  Rendered shared/_top_nav.html.erb (Duration: 1.0ms | GC: 0.0ms)
+  Rendered shared/_status_bar.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 34.1ms | GC: 0.0ms)
+Completed 200 OK in 159ms (Views: 37.2ms | ActiveRecord: 12.1ms (5 queries, 0 cached) | GC: 2.7ms)
+
+
+Started GET "/transactions/5947/edit?account_id=33" for 127.0.0.1 at 2026-05-09 17:32:33 -0400
+Processing by TransactionsController#edit as HTML
+  Parameters: {"account_id" => "33", "id" => "5947"}
+  [1m[36mSession Load (0.6ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.5ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5947 LIMIT 1 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.5ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5947 /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.6ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (37, 33) /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+  [1m[36mPayee Load (0.5ms)[0m  [1m[34mSELECT "payees".* FROM "payees" WHERE "payees"."ledger_id" = 2 ORDER BY "payees"."name" ASC /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/views/accounts/_edit_row.html.erb:13
+  [1m[36mCategory Load (0.4ms)[0m  [1m[34mSELECT "categories".* FROM "categories" WHERE "categories"."ledger_id" = 2 ORDER BY "categories"."name" ASC /*action='edit',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/views/accounts/_edit_row.html.erb:19
+  Rendered accounts/_edit_row.html.erb (Duration: 29.0ms | GC: 0.6ms)
+Completed 200 OK in 90ms (Views: 29.3ms | ActiveRecord: 4.0ms (8 queries, 0 cached) | GC: 1.9ms)
+
+
+Started PATCH "/transactions/5947" for 127.0.0.1 at 2026-05-09 17:32:35 -0400
+Processing by TransactionsController#update as HTML
+  Parameters: {"authenticity_token" => "[FILTERED]", "transaction_entry" => {"account_id" => "33", "date" => "2025-06-21"}, "id" => "5947"}
+  [1m[36mSession Load (1.6ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = 204 LIMIT 1 /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/concerns/authentication.rb:30:in 'Authentication#find_session_by_cookie'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/models/current.rb:3:in 'Current#user'
+  [1m[36mLedger Load (0.5ms)[0m  [1m[34mSELECT "ledgers".* FROM "ledgers" INNER JOIN "ledger_memberships" ON "ledgers"."id" = "ledger_memberships"."ledger_id" WHERE "ledger_memberships"."user_id" = 3 ORDER BY "ledgers"."id" ASC LIMIT 1 /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/application_controller.rb:10:in 'ApplicationController#set_current_ledger'
+  [1m[36mTransactionEntry Load (0.4ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."ledger_id" = 2 AND "transactions"."id" = 5947 LIMIT 1 /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+  [1m[36mTransactionLine Load (0.6ms)[0m  [1m[34mSELECT "transaction_lines".* FROM "transaction_lines" WHERE "transaction_lines"."transaction_entry_id" = 5947 /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+  [1m[36mAccount Load (0.9ms)[0m  [1m[34mSELECT "accounts".* FROM "accounts" WHERE "accounts"."id" IN (37, 33) /*action='update',application='Financebuddy',controller='transactions'*/[0m
+  ↳ app/controllers/transactions_controller.rb:81:in 'TransactionsController#set_transaction_entry'
+Update failed: account_id is nil for transaction 5947, params: #<ActionController::Parameters {"_method" => "patch", "authenticity_token" => "uGPMjUt3WyWrpkC3z5pZ9xUynzXrMv4V2_885uv8jQKDOT61NeW5HmvVdq7dWn_Tbm5KB1ngjqjczxY_hBmOLg", "transaction_entry" => {"account_id" => "33", "date" => "2025-06-21"}, "controller" => "transactions", "action" => "update", "id" => "5947"} permitted: false>
+Completed 400 Bad Request in 50ms (ActiveRecord: 4.2ms (6 queries, 0 cached) | GC: 0.6ms)
+
+

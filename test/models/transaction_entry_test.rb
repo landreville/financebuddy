@@ -110,4 +110,49 @@ class TransactionEntryTest < ActiveSupport::TestCase
     assert_not txn.valid?
     assert_includes txn.errors[:account], "must belong to the same ledger as the transaction"
   end
+
+  test "reconciled? returns true when status is reconciled" do
+    txn = TransactionEntry.new(status: "reconciled")
+    assert txn.reconciled?
+  end
+
+  test "reconciled? returns false when status is cleared" do
+    txn = TransactionEntry.new(status: "cleared")
+    assert_not txn.reconciled?
+  end
+
+  test "reconciled? returns false when status is uncleared" do
+    txn = TransactionEntry.new(status: "uncleared")
+    assert_not txn.reconciled?
+  end
+
+  test "cleared? returns true when status is cleared" do
+    txn = TransactionEntry.new(status: "cleared")
+    assert txn.cleared?
+  end
+
+  test "cleared? returns false when status is reconciled" do
+    txn = TransactionEntry.new(status: "reconciled")
+    assert_not txn.cleared?
+  end
+
+  test "cleared? returns false when status is uncleared" do
+    txn = TransactionEntry.new(status: "uncleared")
+    assert_not txn.cleared?
+  end
+
+  test "uncleared? returns true when status is uncleared" do
+    txn = TransactionEntry.new(status: "uncleared")
+    assert txn.uncleared?
+  end
+
+  test "uncleared? returns false when status is cleared" do
+    txn = TransactionEntry.new(status: "cleared")
+    assert_not txn.uncleared?
+  end
+
+  test "uncleared? returns false when status is reconciled" do
+    txn = TransactionEntry.new(status: "reconciled")
+    assert_not txn.uncleared?
+  end
 end

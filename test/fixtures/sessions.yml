@@ -1,0 +1,9 @@
+jason_personal:
+  user: jason
+  ip_address: "127.0.0.1"
+  user_agent: "test-browser"
+
+one_personal:
+  user: one
+  ip_address: "127.0.0.1"
+  user_agent: "test-browser"
