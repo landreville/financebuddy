@@ -33,6 +33,7 @@ export default class extends Controller {
     if (!row) return
     const accountId = row.dataset.accountId
     const tbody = row.parentElement
+    const table = tbody.closest("table")
 
     fetch(`/transactions/${txnId}/edit?account_id=${accountId}`, {
       headers: { "Accept": "text/html" }
@@ -44,6 +45,15 @@ export default class extends Controller {
         const fragment = range.createContextualFragment(html)
         const newRow = fragment.querySelector("tr.transaction-row--editing")
         if (newRow) {
+          // The HTML5 parser foster-parents <form> elements out of
+          // <tr>/<td> into siblings before the <table>. Pull those
+          // forms out of the fragment and insert them before the
+          // table so they are in the live DOM and findable by ID.
+          const forms = fragment.querySelectorAll("form")
+          if (table && forms.length) {
+            forms.forEach(form => table.before(form))
+          }
+
           row.insertAdjacentElement("afterend", newRow)
           row.style.display = "none"
         }

@@ -47,16 +47,20 @@ def update
     )
 
     if updater.update
-      render turbo_stream: turbo_stream.replace(
-        "transaction_#{@transaction_entry.id}",
-        partial: "accounts/row",
-        locals: {
-          transaction: updater.transaction_entry,
-          account: @line.account,
-          line: @line,
-          categories_by_account: @categories_by_account
-        }
-      )
+      render turbo_stream: [
+        turbo_stream.remove("transaction_#{@transaction_entry.id}_edit_form"),
+        turbo_stream.remove("transaction_#{@transaction_entry.id}_edit"),
+        turbo_stream.replace(
+          "transaction_#{@transaction_entry.id}",
+          partial: "accounts/row",
+          locals: {
+            transaction: updater.transaction_entry,
+            account: @line.account,
+            line: @line,
+            categories_by_account: @categories_by_account
+          }
+        )
+      ]
     else
       render turbo_stream: turbo_stream.replace(
         "transaction_#{@transaction_entry.id}_edit",
