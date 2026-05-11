@@ -9,7 +9,7 @@ class TransactionsController < ApplicationController
     @payees = @current_ledger.payees.order(:name)
     @categories = @current_ledger.categories.order(:name)
 
-    unless @line && @line.account
+    unless @line&.account
       head :not_found
       return
     end
@@ -23,27 +23,28 @@ class TransactionsController < ApplicationController
     }
   end
 
-def update
+  def update
     account_id = params.dig(:transaction_entry, :account_id)
     unless account_id
       Rails.logger.error "Update failed: account_id is nil for transaction #{@transaction_entry.id}, params: #{params.inspect}"
       head :bad_request
       return
     end
-    
+
     @line = @transaction_entry.transaction_lines.find { |l| l.account_id == account_id.to_i }
     unless @line
       Rails.logger.error "Update failed: no line found for account_id #{account_id} in transaction #{@transaction_entry.id}"
       head :not_found
       return
     end
-    
+
     @categories_by_account = @current_ledger.categories.index_by(&:account_id)
 
     updater = TransactionUpdater.new(
       transaction_entry: @transaction_entry,
       attributes: permitted_attributes,
-      current_user: Current.user
+      current_user: Current.user,
+      current_account_id: account_id
     )
 
     if updater.update
@@ -94,6 +95,7 @@ def update
       :date,
       :payee_id,
       :memo,
+      :category_id,
       transaction_lines_attributes: [
         :id,
         :account_id,

@@ -1,10 +1,11 @@
 class TransactionUpdater
   attr_reader :transaction_entry, :errors
 
-  def initialize(transaction_entry:, attributes:, current_user:)
+  def initialize(transaction_entry:, attributes:, current_user:, current_account_id: nil)
     @transaction_entry = transaction_entry
     @attributes = attributes
     @current_user = current_user
+    @current_account_id = current_account_id
     @errors = []
   end
 
@@ -12,6 +13,7 @@ class TransactionUpdater
     return false if locked?
 
     ApplicationRecord.transaction do
+      update_category_line if @attributes.key?(:category_id)
       update_transaction_lines if @attributes.key?(:transaction_lines_attributes)
       update_transaction_entry
       raise ActiveRecord::Rollback if errors.any?
@@ -28,6 +30,16 @@ class TransactionUpdater
 
   def locked?
     @transaction_entry.status == "reconciled"
+  end
+
+  def update_category_line
+    category = Category.find_by(id: @attributes[:category_id])
+    return unless category
+
+    other_line = @transaction_entry.transaction_lines.find { |l| l.account_id != @current_account_id.to_i }
+    return unless other_line
+
+    other_line.update!(account_id: category.account_id)
   end
 
   def update_transaction_lines
