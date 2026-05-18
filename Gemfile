@@ -53,7 +53,7 @@ group :development, :test do
   gem "standard", ">= 1.35.1", require: false
   gem "standard-rails", require: false
 
-  gem "minitest", "~> 5.25"
+  gem "minitest", "~> 6.0"
 end
 
 group :development do
